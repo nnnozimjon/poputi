@@ -9,6 +9,20 @@
 @tailwind components;
 @tailwind utilities;
 
+
 body {
   background-color: white;
+}
+
+@keyframes waveEffect {
+  0% {
+    background-position: 0 0;
+  }
+  100% {
+    background-position: 100% 0;
+  }
+}
+
+.animate-waveBackground {
+  animation: waveEffect 5s linear infinite;
 }

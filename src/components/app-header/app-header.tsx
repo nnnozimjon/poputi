@@ -1,13 +1,14 @@
-import React from "react";
-import { Box, Button, Group } from "@mantine/core";
+import { Button, Container, Group } from "@mantine/core";
+import { Logo } from "../logo/logo";
 
-export const Header = () => {
+export const AppHeader = () => {
   return (
-    <Box className="border border-b border-solid">
-      <header className="p-2">
+    <Container size={"xl"}>
+      <header className="px-2">
         <Group justify="space-between" h="100%">
-          <i>Logo</i>
-
+          <svg width={64} height={64} viewBox="0 0 380 317" className="text-green">
+            <Logo />
+          </svg>
           <Group h="100%" gap={0} visibleFrom="sm">
             <a href="#" className="pr-2 pl-2 text-gray-dark no-underline">Home</a>
             <a href="#" className="pr-2 pl-2 text-gray-dark no-underline">Home</a>
@@ -20,6 +21,6 @@ export const Header = () => {
           </Group>
         </Group>
       </header>
-    </Box>
+    </Container>
   );
 };
