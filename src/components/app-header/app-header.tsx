@@ -32,14 +32,6 @@ export const AppHeader = () => {
                 <Logo />
               </svg>
             </Link>
-            <Group h="100%" gap={0} visibleFrom="sm">
-              <a href="#" className="pr-2 pl-2 text-gray-dark no-underline">
-                Найти поездку
-              </a>
-              <a href="#" className="pr-2 pl-2 text-gray-dark no-underline">
-                Предложить поездку
-              </a>
-            </Group>
 
             {!user.isAuthenticated && (
               <Group visibleFrom="sm">
