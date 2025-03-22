@@ -1,7 +1,12 @@
 import { Flex, Text } from "@mantine/core";
 import Image from "next/image";
 
-export const LocationCard = () => {
+interface Props {
+  name: string
+  cost: string
+  id: string | number
+}
+export const LocationCard = ({ name, cost, id }: Props) => {
   return (
     <div className="relative h-fit">
       <Image
@@ -15,10 +20,10 @@ export const LocationCard = () => {
       <div className="bg-black absolute bottom-2 w-full rounded-2xl p-3 bg-opacity-50">
         <Flex align={"center"} justify={"space-between"}>
           <Text size="lg" className="font-bold text-white">
-            Хучанд
+            {name}
           </Text>
           <Text size="lg" className="font-semibold text-white">
-            150 TJS
+            {cost} TJS
           </Text>
         </Flex>
       </div>

@@ -6,36 +6,27 @@ import { Logo } from "../logo/logo";
 
 const data = [
   {
-    title: "About",
+    title: "Быстрые ссылки",
     links: [
-      { label: "Features", link: "#" },
-      { label: "Pricing", link: "#" },
-      { label: "Support", link: "#" },
-      { label: "Forums", link: "#" },
+      { label: "Регистрация", link: "/register" },
+      { label: "Стать водителем", link: "/profile" },
+      { label: "Поездки", link: "/trips" },
+      { label: "Наш опыт", link: "#becomeDriver" },
     ],
   },
   {
-    title: "Project",
+    title: "Контакты",
     links: [
-      { label: "Contribute", link: "#" },
-      { label: "Media assets", link: "#" },
-      { label: "Changelog", link: "#" },
-      { label: "Releases", link: "#" },
-    ],
-  },
-  {
-    title: "Community",
-    links: [
-      { label: "Join Discord", link: "#" },
-      { label: "Follow on Twitter", link: "#" },
-      { label: "Email newsletter", link: "#" },
-      { label: "GitHub discussions", link: "#" },
+      { label: "Telegram", link: "https://t.me/" },
+      { label: "Whatsapp", link: "https://whatsapp.com/" },
+      { label: "Instagram", link: "https://instagram.com/" },
+      { label: "Facebook", link: "https://facebook.com" },
     ],
   },
 ];
 
 export const AppFooter = () => {
-  const groups = data.map((group) => {
+  const groups = data.map((group, index) => {
     const links = group.links.map((link, index) => (
       <Text<"a">
         key={index}
@@ -49,7 +40,7 @@ export const AppFooter = () => {
     ));
 
     return (
-      <div className={classes.wrapper} key={group.title}>
+      <div className={classes.wrapper} key={index}>
         <Text className={`${classes.title} text-white`}>{group.title}</Text>
         {links}
       </div>
@@ -57,7 +48,7 @@ export const AppFooter = () => {
   });
 
   return (
-    <footer className={'py-16 bg-green'}>
+    <footer className={"py-16 bg-main"}>
       <Container className={classes.inner}>
         <div className={classes.logo}>
           <svg
@@ -68,15 +59,17 @@ export const AppFooter = () => {
           >
             <Logo />
           </svg>
-          <Text size="xs" c="white" className={classes.description}>
-            Build fully functional accessible web applications faster than ever
+          <Text size="md" c="white" className={classes.description}>
+            Poputi — это удобный и экономичный способ путешествовать между
+            городами, знакомиться с новыми людьми и делать поездки комфортными и
+            безопасными.
           </Text>
         </div>
         <div className={classes.groups}>{groups}</div>
       </Container>
       <Container className={classes.afterFooter}>
         <Text c="white" size="sm">
-          © {new Date().getFullYear()} Poputki.tj Все права защищены.
+          © {new Date().getFullYear()} Poputi.tj Все права защищены.
         </Text>
       </Container>
     </footer>

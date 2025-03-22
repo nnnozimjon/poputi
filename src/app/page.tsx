@@ -1,29 +1,21 @@
-import { ExperienceCounter } from "@/components/experience-counter/experience-couter";
-import { Faq } from "@/components/faq/faq";
-import { MainPageTopContent } from "@/components/main-page-top-content/main-page-top-content";
-import { PopularLocations } from "@/components/popular-locations/popular-locations";
-import { SocialMedia } from "@/components/social-media/social-media";
-import { Container } from "@mantine/core";
+import { Metadata } from "next";
+import HomePage from "./HomePage";
 
-export default function Home() {
-  return (
-    <div>
-      <MainPageTopContent />
-      <Container size={"xl"}>
-        <PopularLocations />
-      </Container>
+export const metadata: Metadata = {
+    icons: './favicon.png',
+    title: "Poputi.tj – Поиск попутчиков и автомобилей в Таджикистане",
+    description:
+      "Poputi.tj – удобный сервис для поиска попутчиков и автомобилей для поездок по Таджикистану. Экономьте на транспорте, находите надежных водителей и путешествуйте комфортно.",
+    keywords:
+      "Poputi.tj, поиск попутчиков, совместные поездки, автомобили для поездок, поездки по Таджикистану, карпулинг, дешевые поездки, удобные маршруты, сервис попутчиков",
+    openGraph: {
+      title: "Poputi.tj – Найдите попутчиков и автомобили в Таджикистане",
+      description:
+        "Присоединяйтесь к Poputi.tj – сервису для поиска попутчиков и автомобилей по всему Таджикистану. Забронируйте поездку или найдите пассажиров легко и быстро!",
+    },
+  };
+  
 
-      <ExperienceCounter />
-      
-      <div className="bg-white-highlight p-10">
-        <p className="text-center text-3xl text-green my-10">
-          Часто задаваемые вопросы
-        </p>
-        <Container size={"xl"} className="mb-20">
-          <Faq />
-          <SocialMedia />
-        </Container>
-      </div>
-    </div>
-  );
+export default function Page() {
+    return <HomePage /> 
 }

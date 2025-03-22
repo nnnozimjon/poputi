@@ -1,6 +1,6 @@
 
 .logo {
-  max-width: 200px;
+  max-width: 400px;
 
   @media (max-width: $mantine-breakpoint-sm) {
     display: flex;
@@ -31,6 +31,7 @@
 .groups {
   display: flex;
   flex-wrap: wrap;
+  gap: 20px;
 
   @media (max-width: $mantine-breakpoint-sm) {
     display: none;

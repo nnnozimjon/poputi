@@ -1,7 +1,10 @@
 "use client";
 
+import getScrollAnimation from "@/utils/getScrollAnimation";
 import { Group, Text, Accordion } from "@mantine/core";
+import { useMemo } from "react";
 import { LuBadgeInfo } from "react-icons/lu";
+import { motion } from 'framer-motion';
 
 const charactersList = [
     {
@@ -49,7 +52,7 @@ interface AccordionLabelProps {
 function AccordionLabel({ label, image, description }: AccordionLabelProps) {
     return (
         <Group wrap="nowrap">
-            <i className="text-2xl text-green">{image}</i>
+            <i className="text-2xl text-main">{image}</i>
             <div>
                 <Text>{label}</Text>
                 <Text size="sm" c="dimmed" fw={400}>
@@ -61,6 +64,8 @@ function AccordionLabel({ label, image, description }: AccordionLabelProps) {
 }
 
 export const Faq = () => {
+    const scrollAnimation = useMemo(() => getScrollAnimation(), [])
+
     const items = charactersList.map((item) => (
         <Accordion.Item value={item.id} key={item.label}>
             <Accordion.Control>
@@ -71,11 +76,12 @@ export const Faq = () => {
             </Accordion.Panel>
         </Accordion.Item>
     ));
+
     return (
-        <div>
+        <motion.div variants={scrollAnimation}>
             <Accordion className="bg-white" chevronPosition="right" variant="contained">
                 {items}
             </Accordion>
-        </div>
+        </motion.div>
     );
 };

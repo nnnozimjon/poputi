@@ -1,31 +1,57 @@
-import MainImage from "@/assets/beautiful-sky.jpg";
-import { Button, Container } from "@mantine/core";
-import Image from "next/image";
+import { Button, Container, Group, Text } from "@mantine/core";
+import { CarLandscapeSvg } from "../carLandscape";
+import { TajikistanMapSvg } from "../tajikistanMap";
+import { SearchTrips } from "../searchTrips";
 
 export const MainPageTopContent = () => {
-  return (
-    <div className="relative">
-      <Image
-        width={"4096"}
-        height={"2048"}
-        className="w-full sm:h-80 h-48 object-cover object-bottom"
-        src={MainImage.src}
-        alt=""
-      />
-      
-      <div className="absolute top-0 w-full h-full bg-black opacity-40"></div>
-
-      <div className="absolute flex items-center justify-center top-0 w-full h-full">
-        <Container size={"xl"} className="text-center grid grid-cols-2">
-          <p className="text-white text-3xl font-bold grid-cols-1">
-            Сервис для <i className="text-green"> поиска попутчиков </i> и автомобилей для поездок по
-            <i className="text-green"> Таджикистан</i>
-          </p>
-          <div className="grid-cols-1">
-          <Button>Something</Button>
+    return (
+      <div className="bg-secondary-100 w-full">
+        <Container
+          size={"xl"}
+          className="py-10 sm:py-14 grid grid-cols-12 gap-6 sm:gap-10 w-full"
+        >
+          {/* Left Content */}
+          <div className="md:col-span-6 col-span-12 md:order-1 order-2 flex flex-col gap-6 sm:gap-10 items-center justify-center">
+            <Text className="text-center sm:text-left font-semibold text-3xl md:text-6xl text-dark-blue mt-0 md:mt-20">
+              Сервис для 
+              <strong className="text-main">поиска попутчиков</strong>
+               и автомобилей для поездок по 
+              <strong className="text-main">Таджикистан</strong>
+            </Text>
+            <Text className="text-secondary-200 text-center sm:text-left">
+              Найдите надежного водителя или поделите расходы на поездку с
+              попутчиками. Водители могут добавлять свои автомобили, создавать
+              маршруты и устанавливать цены на места в зависимости от комфорта и
+              расположения в салоне.
+            </Text>
+  
+            {/* Buttons */}
+            <Group visibleFrom="md" className="w-full flex flex-col md:flex-row gap-3 sm:gap-5 items-center sm:items-end">
+              <Button className="w-full sm:w-auto bg-dark-blue hover:bg-dark-blue h-14">
+                Найти поездку
+              </Button>
+              <Button className="w-full sm:w-auto bg-dark-blue hover:bg-dark-blue h-14">
+                Предложить поездку
+              </Button>
+            </Group>
+          </div>
+  
+          {/* Right Content (SVGs) */}
+          <div className="md:col-span-6 md:order-2 order-1 col-span-12 flex flex-col gap-4 items-center md:items-start">
+            <svg className="w-full h-full" viewBox="0 0 553 399">
+              <TajikistanMapSvg />
+            </svg>
+            <svg className="w-full h-full" viewBox="0 0 553 201">
+              <CarLandscapeSvg />
+            </svg>
+          </div>
+  
+          {/* Search Trips */}
+          <div className="order-3 col-span-12 w-full">
+            <SearchTrips />
           </div>
         </Container>
       </div>
-    </div>
-  );
-};
+    );
+  };
+  
