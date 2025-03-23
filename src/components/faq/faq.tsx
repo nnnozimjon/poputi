@@ -4,84 +4,90 @@ import getScrollAnimation from "@/utils/getScrollAnimation";
 import { Group, Text, Accordion } from "@mantine/core";
 import { useMemo } from "react";
 import { LuBadgeInfo } from "react-icons/lu";
-import { motion } from 'framer-motion';
+import { motion } from "framer-motion";
 
 const charactersList = [
-    {
-        id: "bender",
-        image: <LuBadgeInfo />,
-        label: "Как найти партнеров для поездок?",
-        description: "Инфо",
-        content: `Для поиска водителей или пассажиров, вернитесь на нашу платформу через приложение или сайт и перейдите в разделы ‘Предложить поездку’ или ‘Найти поездку’.`,
-    },
+  {
+    id: "bender",
+    image: <LuBadgeInfo />,
+    label: "Как найти партнеров для поездок?",
+    description: "Инфо",
+    content: `Для поиска водителей или пассажиров, вернитесь на нашу платформу через приложение или сайт и перейдите в разделы ‘Предложить поездку’ или ‘Найти поездку’.`,
+  },
 
-    {
-        id: "carol",
-        image: <LuBadgeInfo />,
-        label: "Где найти информацию о предстоящих поездках?",
-        description: "Инфо",
-        content:
-            `Чтобы получить информацию о предстоящих поездках, нажмите кнопку ‘Найти поездку’ и выберите интересующую вас заявку, чтобы получить подробности о поездке.`,
-    },
+  {
+    id: "carol",
+    image: <LuBadgeInfo />,
+    label: "Где найти информацию о предстоящих поездках?",
+    description: "Инфо",
+    content: `Чтобы получить информацию о предстоящих поездках, нажмите кнопку ‘Найти поездку’ и выберите интересующую вас заявку, чтобы получить подробности о поездке.`,
+  },
 
-    {
-        id: "homer",
-        image: <LuBadgeInfo />,
-        label: "Как забронировать место заранее?",
-        description: "Инфо",
-        content:
-            `Для совершения предварительного бронирования заранее найдите нужное объявление, свяжитесь по указанному номеру и договоритесь с водителем или пассажиром.`,
-    },
+  {
+    id: "homer",
+    image: <LuBadgeInfo />,
+    label: "Как забронировать место заранее?",
+    description: "Инфо",
+    content: `Для совершения предварительного бронирования заранее найдите нужное объявление, свяжитесь по указанному номеру и договоритесь с водителем или пассажиром.`,
+  },
 
-    {
-        id: "sider",
-        image: <LuBadgeInfo />,
-        label: "Почему всё бесплатно? Разве такое возможно? ",
-        description: "Инфо",
-        content:
-            `Мы действительно не альтруисты. Однако наш доход не зависит от клиентов. В будущем планируем ввести подписку для водителей на простых условиях. Сейчас никаких платных подписок нет.`,
-    },
+  {
+    id: "sider",
+    image: <LuBadgeInfo />,
+    label: "Почему всё бесплатно? Разве такое возможно? ",
+    description: "Инфо",
+    content: `Мы действительно не альтруисты. Однако наш доход не зависит от клиентов. В будущем планируем ввести подписку для водителей на простых условиях. Сейчас никаких платных подписок нет.`,
+  },
 ];
 
 interface AccordionLabelProps {
-    label: string;
-    image: React.ReactNode;
-    description: string;
+  label: string;
+  image: React.ReactNode;
+  description: string;
 }
 
 function AccordionLabel({ label, image, description }: AccordionLabelProps) {
-    return (
-        <Group wrap="nowrap">
-            <i className="text-2xl text-main">{image}</i>
-            <div>
-                <Text>{label}</Text>
-                <Text size="sm" c="dimmed" fw={400}>
-                    {description}
-                </Text>
-            </div>
-        </Group>
-    );
+  return (
+    <Group wrap="nowrap">
+      <i className="text-2xl text-main">{image}</i>
+      <div>
+        <Text>{label}</Text>
+        <Text size="sm" c="dimmed" fw={400}>
+          {description}
+        </Text>
+      </div>
+    </Group>
+  );
 }
 
 export const Faq = () => {
-    const scrollAnimation = useMemo(() => getScrollAnimation(), [])
+  const scrollAnimation = useMemo(() => getScrollAnimation(), []);
 
-    const items = charactersList.map((item) => (
-        <Accordion.Item value={item.id} key={item.label}>
-            <Accordion.Control>
-                <AccordionLabel {...item} />
-            </Accordion.Control>
-            <Accordion.Panel>
-                <Text size="lg">{item.content}</Text>
-            </Accordion.Panel>
-        </Accordion.Item>
-    ));
+  const items = charactersList.map((item) => (
+    <Accordion.Item value={item.id} key={item.label}>
+      <Accordion.Control>
+        <AccordionLabel {...item} />
+      </Accordion.Control>
+      <Accordion.Panel>
+        <Text size="lg">{item.content}</Text>
+      </Accordion.Panel>
+    </Accordion.Item>
+  ));
 
-    return (
-        <motion.div variants={scrollAnimation}>
-            <Accordion className="bg-white" chevronPosition="right" variant="contained">
-                {items}
-            </Accordion>
-        </motion.div>
-    );
+  return (
+    <motion.div
+      initial="offscreen"
+      whileInView={"onscreen"}
+      viewport={{ once: true, amount: 0.8 }}
+      variants={scrollAnimation}
+    >
+      <Accordion
+        className="bg-white"
+        chevronPosition="right"
+        variant="contained"
+      >
+        {items}
+      </Accordion>
+    </motion.div>
+  );
 };

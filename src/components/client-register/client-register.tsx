@@ -1,4 +1,4 @@
-"use client"
+"use client";
 import { Button, Container } from "@mantine/core";
 import { GiHorizonRoad } from "react-icons/gi";
 import { FaHandHoldingUsd } from "react-icons/fa";
@@ -9,7 +9,7 @@ import { IoSearch } from "react-icons/io5";
 import { BiPlusCircle } from "react-icons/bi";
 import { useMemo } from "react";
 import getScrollAnimation from "@/utils/getScrollAnimation";
-import { motion } from 'framer-motion'
+import { motion } from "framer-motion";
 
 const clientSureInfo = [
   {
@@ -48,10 +48,16 @@ const driverSureInfo = [
 ];
 
 export const ClientRegisterContent = () => {
- const scrollAnimation = useMemo(() => getScrollAnimation(), []) 
+  const scrollAnimation = useMemo(() => getScrollAnimation(), []);
   return (
     <Container size={"xl"} className="mt-10" id="becomeDriver">
-      <motion.div variants={scrollAnimation} className="grid grid-cols-1 md:grid-cols-2 gap-4">
+      <motion.div
+        initial="offscreen"
+        whileInView={"onscreen"}
+        viewport={{ once: true, amount: 0.8 }}
+        variants={scrollAnimation}
+        className="grid grid-cols-1 md:grid-cols-2 gap-4"
+      >
         <div className="border border-none md:border-1px md:border-solid border-main p-4 rounded-lg">
           <h1 className="text-center text-lg mb-10">Если вы водитель</h1>
           <div className="flex flex-col gap-10">

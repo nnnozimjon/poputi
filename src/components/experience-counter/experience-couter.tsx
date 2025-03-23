@@ -1,4 +1,4 @@
-'use client';
+"use client";
 
 import React, { useMemo } from "react";
 import { Container } from "@mantine/core";
@@ -7,10 +7,10 @@ import { FaMapLocationDot } from "react-icons/fa6";
 import { GiHorizonRoad } from "react-icons/gi";
 import { RiEmotionHappyFill } from "react-icons/ri";
 import getScrollAnimation from "@/utils/getScrollAnimation";
-import { motion } from 'framer-motion'
+import { motion } from "framer-motion";
 
 export const ExperienceCounter = () => {
-  const scrollAnimation = useMemo(() => getScrollAnimation(), []) 
+  const scrollAnimation = useMemo(() => getScrollAnimation(), []);
   const experienceData = [
     {
       id: 1,
@@ -38,7 +38,13 @@ export const ExperienceCounter = () => {
     },
   ];
   return (
-    <motion.div variants={scrollAnimation} className="p-8 my-10 md:my-32">
+    <motion.div
+      initial="offscreen"
+      whileInView={"onscreen"}
+      viewport={{ once: true, amount: 0.8 }}
+      variants={scrollAnimation}
+      className="p-8 my-10 md:my-32"
+    >
       <Container>
         <p className="text-center text-xl md:text-2xl text-dark-blue font-semibold mb-8">
           Цифры подтверждающие наш профессионализм
@@ -54,8 +60,12 @@ export const ExperienceCounter = () => {
                 <div className="border-4 border-solid border-main border-t-0 border-r-0 w-fit p-4 rounded-full shrink-0 flex items-center justify-center">
                   {styledIcon}
                 </div>
-                <p className="text-2xl text-main mt-2 text-center">{ex?.count}</p>
-                <p className="text-sm text-gray-dark text-center">{ex?.label}</p>
+                <p className="text-2xl text-main mt-2 text-center">
+                  {ex?.count}
+                </p>
+                <p className="text-sm text-gray-dark text-center">
+                  {ex?.label}
+                </p>
               </div>
             );
           })}
