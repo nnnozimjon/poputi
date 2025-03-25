@@ -7,3 +7,4 @@ export * from './useDriver';
 export * from './useCarBodyType';
 export * from './useCarBrand';
 export * from './useCarModel';
+export * from './useCarSeats';

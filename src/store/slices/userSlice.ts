@@ -10,6 +10,7 @@ interface JWTPayload {
   user_role: string[];
   is_driver: boolean
   email: string;
+  is_car_seats_added: boolean
 }
 
 interface User {
@@ -20,12 +21,14 @@ interface User {
   phone_number: string;
   email: string;
   fio: string;
+  is_car_seats_added: boolean
 }
 
 interface InitialState {
   user: User | null;
   isAuthenticated: boolean;
   isDriver: boolean
+  isCarSeatsAdded: boolean
 }
 
 
@@ -37,7 +40,7 @@ const getInitialState = (): InitialState => {
     const decryptedToken = decryptToken(storedToken as string) as JWTPayload | null;
 
     if (decryptedToken) {
-      const { id, phone_number, fio, user_role, email, is_driver } = decryptedToken;
+      const { id, phone_number, fio, user_role, email, is_driver, is_car_seats_added } = decryptedToken;
 
       return {
         user: {
@@ -48,9 +51,11 @@ const getInitialState = (): InitialState => {
           user_role,
           is_driver,
           email,
+          is_car_seats_added,
         },
         isAuthenticated: true,
-        isDriver: is_driver
+        isDriver: is_driver,
+        isCarSeatsAdded: is_car_seats_added
       };
     } else {
       console.error("Decryption failed or returned null");
@@ -60,7 +65,8 @@ const getInitialState = (): InitialState => {
   return {
     user: null,
     isAuthenticated: false,
-    isDriver: false
+    isDriver: false,
+    isCarSeatsAdded: false
   };
 };
 
