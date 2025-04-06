@@ -2,7 +2,7 @@ import { cookies } from "next/headers";
 import { NextRequest, NextResponse } from "next/server";
 import { decryptToken } from "./utils";
 
-const protectedRoutes = ["/profile", "/trips"];
+const protectedRoutes = ["/profile"];
 const authRoutes = ["/auth", "/register"]; // Add auth and register routes here
 
 export default async function middleware(req: NextRequest) {

@@ -41,9 +41,10 @@ export function useCreateCarSeats() {
 }
 
 // Custom Hook for fetching all driver seats
-export function useFindAllDriverSeats() {
+export function useFindAllDriverSeats(isAuthed: boolean) {
   return useQuery({
     queryKey: ['carSeats'],
     queryFn: () => findAllDriverSeats(),
+    enabled: isAuthed
   });
 }

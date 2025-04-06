@@ -1,4 +1,5 @@
 import { useCities, useCreateTrip, useFindAllDriverSeats } from "@/hooks";
+import { useAppSelector } from "@/store/store";
 import { mapToSelectOptions } from "@/utils";
 import {
   Alert,
@@ -40,9 +41,10 @@ type Trip = {
 };
 
 export const CreateTripModal = (props: Props) => {
+  const user = useAppSelector((state) => state.user)
   const { mutate } = useCreateTrip();
 
-  const { data, isSuccess } = useFindAllDriverSeats();
+  const { data, isSuccess } = useFindAllDriverSeats(user.isAuthenticated);
   const { data: cities } = useCities();
 
   const mappedCities = mapToSelectOptions(cities ?? [], "name", "name");
