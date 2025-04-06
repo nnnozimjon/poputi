@@ -1,4 +1,5 @@
-import { useFindAllDriverSeats } from "@/hooks";
+import { useCities, useCreateTrip, useFindAllDriverSeats } from "@/hooks";
+import { mapToSelectOptions } from "@/utils";
 import {
   Alert,
   Button,
@@ -23,12 +24,13 @@ interface Props {
 type Seat = {
   id: number;
   is_driver: boolean;
+  price?: number;
   isBooked: boolean;
 };
 
 type Trip = {
-  departure_city: string | null;
-  destination_city: string | null;
+  departure_city: string;
+  destination_city: string;
   departure_time: Date | null;
   destination_time: Date | null;
   is_sending_package_available: boolean;
@@ -37,13 +39,18 @@ type Trip = {
 };
 
 export const CreateTripModal = (props: Props) => {
+  const { mutate } = useCreateTrip();
+
   const { data, isSuccess } = useFindAllDriverSeats();
+  const { data: cities } = useCities();
+
+  const mappedCities = mapToSelectOptions(cities ?? [], "name", "name");
 
   const [seats, setSeats] = useState([]);
 
   const initialFormData: Trip = {
-    departure_city: null,
-    destination_city: null,
+    departure_city: "",
+    destination_city: "",
     departure_time: null,
     destination_time: null,
     is_sending_package_available: false,
@@ -83,6 +90,26 @@ export const CreateTripModal = (props: Props) => {
     }
   }, [isSuccess, data]);
 
+  // !comment: add toast and error handling
+  const handleSubmit = () => {
+    const filteredSeats: Array<{
+      id: number;
+      is_driver: boolean;
+      price?: number;
+    }> = seats
+      .flatMap((group: Seat[]) =>
+        group.filter((person) => person.isBooked === false)
+      )
+      .map((person) => ({ id: person.id, is_driver: person.is_driver, price: 30 }));
+
+    mutate({ ...formData, seats: filteredSeats }, {
+      onSuccess: () => {
+        setFormData(initialFormData)
+        props.close()
+      }
+    });
+  };
+
   return (
     <Modal
       centered
@@ -105,14 +132,18 @@ export const CreateTripModal = (props: Props) => {
             className="w-full"
             onChange={(value) => handleChange("departure_city", String(value))}
             value={String(formData.departure_city)}
+            data={mappedCities}
           />
           <Select
             withAsterisk
             label="Куда"
             placeholder="Куда"
             className="w-full"
-            onChange={(value) => handleChange("destination_city", String(value))}
+            onChange={(value) =>
+              handleChange("destination_city", String(value))
+            }
             value={String(formData.destination_city)}
+            data={mappedCities}
           />
         </div>
         <div className="flex flex-col md:flex-row gap-4">
@@ -138,8 +169,14 @@ export const CreateTripModal = (props: Props) => {
           />
         </div>
         <Checkbox
-          defaultChecked={formData.is_sending_package_available}
           label="📦 Посылка"
+          checked={formData.is_sending_package_available}
+          onChange={(event) =>
+            setFormData((prev) => ({
+              ...prev,
+              is_sending_package_available: event.target.checked,
+            }))
+          }
         />
         <Textarea
           value={formData.description}
@@ -180,7 +217,7 @@ export const CreateTripModal = (props: Props) => {
           Отменить
         </Button>
         <Button
-          onClick={() => console.log(seats)}
+          onClick={handleSubmit}
           className="bg-dark-blue hover:bg-dark-blue"
         >
           Сохранить

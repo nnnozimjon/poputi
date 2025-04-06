@@ -6,6 +6,7 @@ import { Faq } from "@/components/faq/faq";
 import { MainPageTopContent } from "@/components/main-page-top-content/main-page-top-content";
 import { PopularLocations } from "@/components/popular-locations/popular-locations";
 import { SocialMedia } from "@/components/social-media/social-media";
+import { VehicleTypes } from "@/components/vehicle-types/vehicle-types";
 import getScrollAnimation from "@/utils/getScrollAnimation";
 import { Container } from "@mantine/core";
 import { motion } from "framer-motion";
@@ -17,6 +18,7 @@ export default function HomePage() {
   return (
     <div>
       <MainPageTopContent />
+       <VehicleTypes />
       <Container size={"xl"} className="mt-20">
         <PopularLocations />
       </Container>

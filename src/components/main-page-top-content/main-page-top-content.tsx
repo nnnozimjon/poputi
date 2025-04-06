@@ -10,7 +10,7 @@ import { redirect } from "@/utils";
 export const MainPageTopContent = () => {
   const user = useAppSelector((state) => state.user);
   // !comment: change isCarSeatsAdded with the state var
-  const isCarSeatsAdded = true;
+  const isCarSeatsAdded = user.isCarSeatsAdded;
 
   const [isOpenCarSeatsModal, setIsOpenCarSeatsModal] =
     useState<boolean>(false);
@@ -70,7 +70,7 @@ export const MainPageTopContent = () => {
         </div>
 
         {/* Right Content (SVGs) */}
-        <div className="md:col-span-6 md:order-2 order-1 col-span-12 flex flex-col gap-4 items-center md:items-start">
+        <div className="md:col-span-6 md:order-2 order-3 md:order-1 col-span-12 flex flex-col gap-4 items-center md:items-start">
           <svg className="w-full h-full" viewBox="0 0 553 399">
             <TajikistanMapSvg />
           </svg>
@@ -80,7 +80,7 @@ export const MainPageTopContent = () => {
         </div>
 
         {/* Search Trips */}
-        <div className="order-3 col-span-12 w-full">
+        <div className="order-1 md:order-3 col-span-12 w-full">
           <SearchTrips />
         </div>
       </Container>
@@ -93,6 +93,7 @@ export const MainPageTopContent = () => {
         opened={isOpenCreateTripModal}
         close={() => setIsOpenCreateTripModal(false)}
       />
+
     </div>
   );
 };

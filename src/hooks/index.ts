@@ -8,3 +8,5 @@ export * from './useCarBodyType';
 export * from './useCarBrand';
 export * from './useCarModel';
 export * from './useCarSeats';
+export * from './useTrips';
+export * from './useBooking';
