@@ -12,8 +12,12 @@ import { useState } from "react";
 import { useCreateBooking, useGetTripById } from "@/hooks";
 import { GiCarKey } from "react-icons/gi";
 import { toast } from "react-toastify";
+import { useAppSelector } from "@/store/store";
+import { redirect } from "@/utils";
 
 export default function BookingPage() {
+  const user = useAppSelector((state) => state.user);
+
   const searchParams = useSearchParams();
   const tripId = searchParams.get('id');
 
@@ -41,6 +45,10 @@ export default function BookingPage() {
   };
 
   const handleBooking = () => {
+    if (!user.isAuthenticated) {
+      return redirect('/auth')
+    }
+
     bookSeats({
       trip_id: tripId as string,
       seat_ids: selectedSeats,
