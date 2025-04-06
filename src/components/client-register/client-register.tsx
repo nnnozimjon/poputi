@@ -54,7 +54,7 @@ export const ClientRegisterContent = () => {
       <motion.div
         initial="offscreen"
         whileInView={"onscreen"}
-        viewport={{ once: true, amount: 0.8 }}
+        viewport={{ once: true, amount: 0.3 }}
         variants={scrollAnimation}
         className="grid grid-cols-1 md:grid-cols-2 gap-4"
       >
