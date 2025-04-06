@@ -17,7 +17,7 @@ interface Seat {
 }
 
 // Function to create car seats
-const createCarSeats = async (carSeatData: CreateCarSeatDto): Promise<Seat[][]> => {
+const createCarSeats = async (carSeatData: CreateCarSeatDto): Promise<{carSeats: Seat[][], token: string}> => {
   const { data } = await apiClient.post('/car-seats', carSeatData);
   return data;
 };
@@ -32,10 +32,9 @@ const findAllDriverSeats = async (): Promise<Seat[][]> => {
 export function useCreateCarSeats() {
   const queryClient = useQueryClient();
 
-  return useMutation<Seat[][], Error, CreateCarSeatDto>({
+  return useMutation<{ carSeats: Seat[][], token: string }, Error, CreateCarSeatDto>({
     mutationFn: createCarSeats,
     onSuccess: () => {
-      // Invalidate and refetch the car seats query after a successful creation
       queryClient.invalidateQueries({ queryKey: ['carSeats'] });
     },
   });

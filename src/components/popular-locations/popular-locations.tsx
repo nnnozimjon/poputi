@@ -36,7 +36,7 @@ export const PopularLocations = () => {
       variants={scrollAnimation}
       className="overflow-x-hidden" // Prevent horizontal scrolling issues
     >
-      <Text className="text-dark-blue text-center text-2xl font-semibold my-10">
+      <Text className="text-dark-blue text-center text-2xl font-semibold my-5">
         <GrMapLocation /> Популярные направления
       </Text>
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 p-4">

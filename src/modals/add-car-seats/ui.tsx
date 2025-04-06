@@ -4,6 +4,11 @@ import { BsPlus } from "react-icons/bs";
 import { PiSeatbeltFill } from "react-icons/pi";
 import { GiCarKey } from "react-icons/gi";
 import { useCreateCarSeats } from "@/hooks";
+import { setCookie } from "cookies-next";
+import { decryptToken } from "@/utils";
+import { loginSuccess } from "@/store/slices";
+import { useDispatch } from "react-redux";
+import { toast } from "react-toastify";
 
 interface Props {
   opened: boolean;
@@ -12,6 +17,7 @@ interface Props {
 
 export const AddCarSeats = (props: Props) => {
   const { mutate } = useCreateCarSeats();
+  const dispatch = useDispatch();
 
   const seats = [
     [
@@ -97,11 +103,19 @@ export const AddCarSeats = (props: Props) => {
       { seats: mappedSeats },
       {
         onSuccess: (data) => {
-          // !comment: new the token
+          toast.success("Автомобильные сиденья добавлены успешно");
+          setCookie("access_token", data?.token);
+          const decryptedData = decryptToken(data.token);
+
+          setTimeout(() => {
+            dispatch(loginSuccess(decryptedData));
+            window.location.replace("/");
+          }, 1000);
+
           props.close();
         },
         onError: (err) => {
-          console.log(err);
+          toast.error("Ошибка при добавлении автомобильных сидений");
         },
       }
     );

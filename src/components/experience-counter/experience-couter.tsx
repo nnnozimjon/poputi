@@ -43,7 +43,7 @@ export const ExperienceCounter = () => {
       whileInView={"onscreen"}
       viewport={{ once: true, amount: 0.8 }}
       variants={scrollAnimation}
-      className="p-8 my-10 md:my-32"
+      className="p-8 my-5 md:my-32"
     >
       <Container>
         <p className="text-center text-xl md:text-2xl text-dark-blue font-semibold mb-8">

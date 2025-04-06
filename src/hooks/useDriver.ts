@@ -20,7 +20,7 @@ interface Driver {
 }
 
 // Function to create a new driver
-const createDriver = async (driverData: CreateDriverDto): Promise<Driver> => {
+const createDriver = async (driverData: CreateDriverDto): Promise<{driver: Driver, token: string}> => {
   const { data } = await apiClient.post('/drivers', driverData);
   return data;
 };
@@ -29,7 +29,7 @@ const createDriver = async (driverData: CreateDriverDto): Promise<Driver> => {
 export function useDriver() {
   const queryClient = useQueryClient();
 
-  return useMutation<Driver, Error, CreateDriverDto>({
+  return useMutation<{driver: Driver, token: string}, Error, CreateDriverDto>({
     mutationFn: createDriver,
     onSuccess: () => {
       // Invalidate and refetch the drivers query after a successful creation

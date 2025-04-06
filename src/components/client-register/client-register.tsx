@@ -80,6 +80,11 @@ export const ClientRegisterContent = () => {
           <Button
             className="bg-dark-blue hover:bg-dark-blue w-full mt-5"
             leftSection={<BiPlusCircle />}
+            onClick={(e) => {
+              e.preventDefault();
+              const createTripButton = document.getElementById('create-trip');
+              createTripButton?.click();
+            }}
           >
             Предложить поездку
           </Button>
@@ -106,6 +111,18 @@ export const ClientRegisterContent = () => {
           <Button
             className="bg-dark-blue hover:bg-dark-blue w-full mt-5"
             leftSection={<IoSearch />}
+            onClick={(e) => {
+              e.preventDefault();
+              const element = document.getElementById('search-trips2');
+              const headerOffset = 160; // Account for fixed header height
+              const elementPosition = element?.getBoundingClientRect().top;
+              const offsetPosition = elementPosition ? elementPosition + window.pageYOffset - headerOffset : 0;
+              
+              window.scrollTo({
+                top: offsetPosition,
+                behavior: "smooth"
+              });
+            }}
           >
             Найти поездку
           </Button>

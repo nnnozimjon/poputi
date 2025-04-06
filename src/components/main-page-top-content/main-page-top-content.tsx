@@ -9,7 +9,6 @@ import { redirect } from "@/utils";
 
 export const MainPageTopContent = () => {
   const user = useAppSelector((state) => state.user);
-  // !comment: change isCarSeatsAdded with the state var
   const isCarSeatsAdded = user.isCarSeatsAdded;
 
   const [isOpenCarSeatsModal, setIsOpenCarSeatsModal] =
@@ -55,14 +54,29 @@ export const MainPageTopContent = () => {
             visibleFrom="md"
             className="w-full flex flex-col md:flex-row gap-3 sm:gap-5 items-center sm:items-end"
           >
-            <Button className="w-full sm:w-auto bg-dark-blue hover:bg-dark-blue h-14">
+            <Button 
+              className="w-full sm:w-auto bg-dark-blue hover:bg-dark-blue h-14"
+              onClick={() => {
+                const departureCity = document.getElementById('departure-city');
+                departureCity?.click();
+                const element = document.getElementById('search-trips2');
+                const headerOffset = 160;
+                const elementPosition = element?.getBoundingClientRect().top;
+                const offsetPosition = elementPosition ? elementPosition + window.pageYOffset - headerOffset : 0;
+                
+                window.scrollTo({
+                  top: offsetPosition,
+                  behavior: "smooth"
+                });
+              }}
+            >
               Найти поездку
             </Button>
 
-            {/* !comment: first check if the user is driver and is logedin */}
             <Button
               onClick={handleOpenRequiredModal}
               className="w-full sm:w-auto bg-dark-blue hover:bg-dark-blue h-14"
+              id="create-trip"
             >
               Предложить поездку
             </Button>

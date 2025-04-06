@@ -1,6 +1,6 @@
 "use client";
 
-import { Button, Container, Group } from "@mantine/core";
+import { Button, Container, Group, Burger, Drawer, Stack } from "@mantine/core";
 import { Logo } from "../logo/logo";
 import { redirect } from "@/utils";
 import { useAppSelector } from "@/store/store";
@@ -8,13 +8,16 @@ import { CgLogOut, CgProfile } from "react-icons/cg";
 import { useDispatch } from "react-redux";
 import { logout } from "@/store/slices";
 import Link from "next/link";
+import { useState } from "react";
 
 export const AppHeader = () => {
   const dispatch = useDispatch();
   const user = useAppSelector((state) => state.user);
+  const [opened, setOpened] = useState(false);
 
   const logoutUser = () => {
     dispatch(logout());
+    setOpened(false);
   };
 
   return (
@@ -34,38 +37,111 @@ export const AppHeader = () => {
             </Link>
 
             {!user.isAuthenticated && (
-              <Group visibleFrom="sm">
-                <Button variant="default" onClick={() => redirect("/auth")}>
-                  Вход
-                </Button>
-                <Button
-                  className="bg-main hover:bg-main"
-                  onClick={() => redirect("/register")}
+              <>
+                <Group visibleFrom="sm">
+                  <Button variant="default" onClick={() => redirect("/auth")}>
+                    Вход
+                  </Button>
+                  <Button
+                    className="bg-main hover:bg-main"
+                    onClick={() => redirect("/register")}
+                  >
+                    Регистрация
+                  </Button>
+                </Group>
+
+                <Burger
+                  opened={opened}
+                  onClick={() => setOpened(!opened)}
+                  className="sm:hidden"
+                />
+
+                <Drawer
+                  opened={opened}
+                  onClose={() => setOpened(false)}
+                  position="right"
+                  size="100%"
                 >
-                  Регистрация
-                </Button>
-              </Group>
+                  <Stack p="md">
+                    <Button
+                      variant="default"
+                      onClick={() => {
+                        redirect("/auth");
+                        setOpened(false);
+                      }}
+                    >
+                      Вход
+                    </Button>
+                    <Button
+                      className="bg-main hover:bg-main"
+                      onClick={() => {
+                        redirect("/register");
+                        setOpened(false);
+                      }}
+                    >
+                      Регистрация
+                    </Button>
+                  </Stack>
+                </Drawer>
+              </>
             )}
 
             {user.isAuthenticated && (
-              <Group visibleFrom="sm">
-                <Button
-                  rightSection={<CgProfile className="text-dark-blue size-6" />}
-                  variant="transparent"
-                  className="text-dark-blue"
-                  onClick={() => redirect("/profile")}
+              <>
+                <Group visibleFrom="sm">
+                  <Button
+                    rightSection={<CgProfile className="text-dark-blue size-6" />}
+                    variant="transparent"
+                    className="text-dark-blue"
+                    onClick={() => redirect("/profile")}
+                  >
+                    Профиль
+                  </Button>
+                  <Button
+                    rightSection={<CgLogOut className="text-red-100 size-6" />}
+                    variant="transparent"
+                    className="text-red-100 hover:text-red-100"
+                    onClick={logoutUser}
+                  >
+                    Выйти
+                  </Button>
+                </Group>
+
+                <Burger
+                  opened={opened}
+                  onClick={() => setOpened(!opened)}
+                  className="sm:hidden"
+                />
+
+                <Drawer
+                  opened={opened}
+                  onClose={() => setOpened(false)}
+                  position="right"
+                  size="100%"
                 >
-                  Профиль
-                </Button>
-                <Button
-                  rightSection={<CgLogOut className="text-red-100 size-6" />}
-                  variant="transparent"
-                  className="text-red-100 hover:text-red-100"
-                  onClick={logoutUser}
-                >
-                  Выйти
-                </Button>
-              </Group>
+                  <Stack p="md">
+                    <Button
+                      rightSection={<CgProfile className="text-dark-blue size-6" />}
+                      variant="transparent"
+                      className="text-dark-blue"
+                      onClick={() => {
+                        redirect("/profile");
+                        setOpened(false);
+                      }}
+                    >
+                      Профиль
+                    </Button>
+                    <Button
+                      rightSection={<CgLogOut className="text-red-100 size-6" />}
+                      variant="transparent"
+                      className="text-red-100 hover:text-red-100"
+                      onClick={logoutUser}
+                    >
+                      Выйти
+                    </Button>
+                  </Stack>
+                </Drawer>
+              </>
             )}
           </Group>
         </header>

@@ -15,6 +15,7 @@ import { Fragment, useEffect, useState } from "react";
 import { BsFillCalendarDateFill } from "react-icons/bs";
 import { GiCarKey } from "react-icons/gi";
 import { PiSeatbeltFill } from "react-icons/pi";
+import { toast } from "react-toastify";
 
 interface Props {
   opened: boolean;
@@ -90,7 +91,6 @@ export const CreateTripModal = (props: Props) => {
     }
   }, [isSuccess, data]);
 
-  // !comment: add toast and error handling
   const handleSubmit = () => {
     const filteredSeats: Array<{
       id: number;
@@ -104,8 +104,12 @@ export const CreateTripModal = (props: Props) => {
 
     mutate({ ...formData, seats: filteredSeats }, {
       onSuccess: () => {
+        toast.success("Поездка создана успешно");
         setFormData(initialFormData)
         props.close()
+      },
+      onError: () => {
+        toast.error("Ошибка при создании поездки");
       }
     });
   };

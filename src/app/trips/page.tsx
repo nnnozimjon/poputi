@@ -8,13 +8,24 @@ import { RxAvatar } from "react-icons/rx";
 import { FaLocationDot } from "react-icons/fa6";
 import { IoCarSport } from "react-icons/io5";
 import { useGetTrips } from "@/hooks";
-import { useEffect, useState } from "react";
+import { useSearchParams } from "next/navigation";
 
 export default function TripsPage() {
+  const searchParams = useSearchParams();
+  const departureCity = searchParams.get("departure_city");
+  const destinationCity = searchParams.get("destination_city");
+  const departureTime = searchParams.get("departure_time");
+  const passengers = searchParams.get("passengers");
+  const type = searchParams.get("type");
+
   const { data: trips, isSuccess } = useGetTrips({
-    departure_city: "",
-    destination_city: "",
+    departure_city: departureCity || "",
+    destination_city: destinationCity || "",
+    departure_time: departureTime || "",
+    passengers: passengers || "",
+    type: type || ""
   });
+
 
   return (
     <Container size={"xl"}>
@@ -23,9 +34,7 @@ export default function TripsPage() {
           <BiCar />
         </div>
         <div className="flex flex-col gap-0">
-          {/* <p className="p-0 m-0 font-bold">Ойбек ⟶ Хучанд</p> */}
-          <p className="p-0 m-0 font-bold">Все попутчики</p>
-          {/* <p className="m-0 p-0">Дата: {new Date().toLocaleDateString()}</p> */}
+          {departureCity && destinationCity ? <p className="p-0 m-0 font-bold">{departureCity} ⟶ {destinationCity}</p> : <p className="p-0 m-0 font-bold">Все попутчики</p>}
         </div>
       </Flex>
       {trips && trips.data.length <= 0 ? (

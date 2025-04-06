@@ -7,10 +7,13 @@ import {
   useCarModels,
   useDriver,
 } from "@/hooks";
+import { loginSuccess } from "@/store/slices";
 import { useAppSelector } from "@/store/store";
-import { mapToSelectOptions } from "@/utils";
+import { decryptToken, mapToSelectOptions } from "@/utils";
 import { Button, Group, Input, Modal, Select } from "@mantine/core";
+import { setCookie } from "cookies-next";
 import { useState } from "react";
+import { useDispatch } from "react-redux";
 import { toast } from "react-toastify";
 
 interface Props {
@@ -20,6 +23,7 @@ interface Props {
 
 export const AddCarModal = (props: Props) => {
   const user = useAppSelector((state) => state.user);
+  const dispatch = useDispatch();
 
   const initialFormData = {
     user_id: user?.user?.id ?? "",
@@ -64,8 +68,15 @@ export const AddCarModal = (props: Props) => {
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     mutate(formData, {
-      onSuccess: () => {
-        // !comment: new the token
+      onSuccess: (data) => {
+        toast.success("Автомобиль добавлен успешно");
+        setCookie("access_token", data?.token);
+        const decryptedData = decryptToken(data.token);
+
+        setTimeout(() => {
+          dispatch(loginSuccess(decryptedData));
+          window.location.replace("/profile");
+        }, 1000);
         cancelModal();
       },
       onError: (error) => {

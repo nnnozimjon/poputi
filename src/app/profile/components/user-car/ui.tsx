@@ -8,8 +8,10 @@ import { useDriverDetails } from "@/hooks/useDriverDetails";
 
 export const UserCar = () => {
   const user = useAppSelector((state) => state.user);
+  const isDriver = user.isDriver;
+
   const [isOpenModal, setIsOpenModal] = useState<boolean>(false);
-  const { data } = useDriverDetails(user.isDriver);
+  const { data } = useDriverDetails(isDriver);
 
   return (
     <LabeledContainer
@@ -24,7 +26,7 @@ export const UserCar = () => {
       <br />
 
       {/* if is not driver */}
-      {!user.isDriver && (
+      {!isDriver && (
         <div className="w-full flex items-center justify-center">
           <Button
             onClick={() => setIsOpenModal(true)}
@@ -37,7 +39,7 @@ export const UserCar = () => {
       )}
 
       {/* if is driver */}
-      {user.isDriver && (
+      {isDriver && (
         <div className="flex flex-col gap-2">
           <h4>Марка авто: {data?.car_brand}</h4>
           <h4>Класс: {data?.car_model}</h4>

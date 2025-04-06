@@ -2,6 +2,7 @@ import { Card, Text, Grid, Container, Button } from "@mantine/core";
 import Image from "next/image";
 import busImage from "@/assets/bus.svg";
 import carImage from "@/assets/car.svg";
+import Link from "next/link";
 
 export const VehicleTypes = () => {
   return (
@@ -25,7 +26,7 @@ export const VehicleTypes = () => {
                 Идеально подходит для групповых поездок и дальних маршрутов.
               </Text>
             </div>
-            <Button className="w-full bg-main text-white my-8">Перейти</Button>
+            <Button component={Link} href="/trips?type=bus" className="w-full bg-main text-white my-8">Перейти</Button>
           </Card>
         </Grid.Col>
 
@@ -46,7 +47,7 @@ export const VehicleTypes = () => {
                 Подходит для небольших групп и коротких маршрутов.
               </Text>
             </div>
-            <Button className="w-full bg-main text-white my-8">Перейти</Button>
+            <Button component={Link} href="/trips?type=car" className="w-full bg-main text-white my-8">Перейти</Button>
           </Card>
         </Grid.Col>
       </Grid>
