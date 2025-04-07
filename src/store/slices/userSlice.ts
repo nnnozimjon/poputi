@@ -83,11 +83,15 @@ const userSlice = createSlice({
     logout: (state) => {
       state.user = null;
       state.isAuthenticated = false;
+      state.isDriver = false;
+      state.isCarSeatsAdded = false;
       deleteCookie("access_token");
     },
     setUserState: (state, action) => {
       state.user = action.payload.user;
       state.isAuthenticated = action.payload.isAuthenticated;
+      state.isDriver = action.payload.isDriver;
+      state.isCarSeatsAdded = action.payload.isCarSeatsAdded;
     },
   },
 });

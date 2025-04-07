@@ -65,6 +65,16 @@ export const AppHeader = () => {
                   <Stack p="md">
                     <Button
                       variant="default"
+                      className="border-main text-main hover:bg-main hover:text-white"
+                      onClick={() => {
+                        redirect("/trips");
+                        setOpened(false);
+                      }}
+                    >
+                      Найти поездку
+                    </Button>
+                    <Button
+                      variant="default"
                       onClick={() => {
                         redirect("/auth");
                         setOpened(false);
@@ -120,6 +130,16 @@ export const AppHeader = () => {
                   size="100%"
                 >
                   <Stack p="md">
+                    <Button
+                      variant="default"
+                      className="border-main text-main hover:bg-main hover:text-white"
+                      onClick={() => {
+                        redirect("/trips");
+                        setOpened(false);
+                      }}
+                    >
+                      Найти поездку
+                    </Button>
                     <Button
                       rightSection={<CgProfile className="text-dark-blue size-6" />}
                       variant="transparent"

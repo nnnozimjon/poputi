@@ -19,7 +19,7 @@ export default function HomePage() {
     <div>
       <MainPageTopContent />
        <VehicleTypes />
-      <Container size={"xl"} className="mt-20">
+      <Container size={"xl"} className="mt-4 md:mt-20">
         <PopularLocations />
       </Container>
       <ClientRegisterContent />

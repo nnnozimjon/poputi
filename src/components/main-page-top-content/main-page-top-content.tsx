@@ -10,6 +10,7 @@ import { redirect } from "@/utils";
 export const MainPageTopContent = () => {
   const user = useAppSelector((state) => state.user);
   const isCarSeatsAdded = user.isCarSeatsAdded;
+  const isDriver = user.isDriver;
 
   const [isOpenCarSeatsModal, setIsOpenCarSeatsModal] =
     useState<boolean>(false);
@@ -17,15 +18,19 @@ export const MainPageTopContent = () => {
     useState<boolean>(false);
 
   const handleOpenRequiredModal = () => {
-    if (user.isAuthenticated) {
-      if (isCarSeatsAdded) {
-        return setIsOpenCreateTripModal(true);
-      }
-
-      return setIsOpenCarSeatsModal(true);
+    if (!user.isAuthenticated) {
+      return redirect("/auth");
     }
 
-    return redirect("/auth");
+    if (!isDriver) {
+      return redirect("/profile");
+    }
+
+    if (isCarSeatsAdded) {
+      return setIsOpenCreateTripModal(true);
+    }
+
+    return setIsOpenCarSeatsModal(true);
   };
 
   return (

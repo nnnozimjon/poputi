@@ -6,7 +6,7 @@ import Link from "next/link";
 
 export const VehicleTypes = () => {
   return (
-    <Container size={"xl"} className="py-8">
+    <Container size={"xl"} className="py-4 md:py-8">
       <Text className="text-2xl font-bold mb-6 text-center text-dark-blue">Выберите тип транспорта</Text>
       <Grid>
         <Grid.Col span={{ base: 12, md: 6 }}>
