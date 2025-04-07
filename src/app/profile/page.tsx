@@ -1,24 +1,20 @@
-"use client";
+import { Metadata } from "next";
+import ProfilePage from "./ProfilePage";
 
-import { Container } from "@mantine/core";
-import {
-  UserCar,
-  UserDetails,
-  UserInfo,
-  UserLevel,
-  UserPreference,
-} from "./components";
+export const metadata: Metadata = {
+    icons: './favicon.png',
+    title: "Poputi.tj – Личный профиль",
+    description:
+      "Управляйте своим профилем на Poputi.tj. Обновляйте личную информацию, просматривайте историю поездок и настраивайте предпочтения для поездок по Таджикистану.",
+    keywords:
+      "Poputi.tj, личный кабинет, профиль пользователя, настройки аккаунта, история поездок, предпочтения поездок",
+    openGraph: {
+      title: "Poputi.tj – Управление личным профилем",
+      description:
+        "Настройте свой профиль на Poputi.tj. Управляйте личной информацией, автомобилями и предпочтениями для комфортных поездок по Таджикистану.",
+    },
+};
 
-export default function ProfilePage() {
-  return (
-    <Container size={"xl"} className="my-10">
-      <div className="grid grid-cols-1 md:grid-cols-12 gap-10">
-        <UserInfo />
-        <UserLevel />
-        <UserCar />
-        <UserDetails />
-        <UserPreference />
-      </div>
-    </Container>
-  );
+export default function Page() {
+    return <ProfilePage />
 }
