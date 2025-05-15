@@ -9,11 +9,7 @@ import { redirect } from "@/utils";
 
 export const MainPageTopContent = () => {
   const user = useAppSelector((state) => state.user);
-  const isCarSeatsAdded = user.isCarSeatsAdded;
-  const isDriver = user.isDriver;
 
-  const [isOpenCarSeatsModal, setIsOpenCarSeatsModal] =
-    useState<boolean>(false);
   const [isOpenCreateTripModal, setIsOpenCreateTripModal] =
     useState<boolean>(false);
 
@@ -22,15 +18,7 @@ export const MainPageTopContent = () => {
       return redirect("/auth");
     }
 
-    if (!isDriver) {
-      return redirect("/profile");
-    }
-
-    if (isCarSeatsAdded) {
-      return setIsOpenCreateTripModal(true);
-    }
-
-    return setIsOpenCarSeatsModal(true);
+    return setIsOpenCreateTripModal(true);
   };
 
   return (
@@ -59,19 +47,21 @@ export const MainPageTopContent = () => {
             visibleFrom="md"
             className="w-full flex flex-col md:flex-row gap-3 sm:gap-5 items-center sm:items-end"
           >
-            <Button 
+            <Button
               className="w-full sm:w-auto bg-dark-blue hover:bg-dark-blue h-14"
               onClick={() => {
-                const departureCity = document.getElementById('departure-city');
+                const departureCity = document.getElementById("departure-city");
                 departureCity?.click();
-                const element = document.getElementById('search-trips2');
+                const element = document.getElementById("search-trips2");
                 const headerOffset = 160;
                 const elementPosition = element?.getBoundingClientRect().top;
-                const offsetPosition = elementPosition ? elementPosition + window.pageYOffset - headerOffset : 0;
-                
+                const offsetPosition = elementPosition
+                  ? elementPosition + window.pageYOffset - headerOffset
+                  : 0;
+
                 window.scrollTo({
                   top: offsetPosition,
-                  behavior: "smooth"
+                  behavior: "smooth",
                 });
               }}
             >
@@ -104,15 +94,10 @@ export const MainPageTopContent = () => {
         </div>
       </Container>
 
-      <AddCarSeats
-        opened={isOpenCarSeatsModal}
-        close={() => setIsOpenCarSeatsModal(false)}
-      />
       <CreateTripModal
         opened={isOpenCreateTripModal}
         close={() => setIsOpenCreateTripModal(false)}
       />
-
     </div>
   );
 };

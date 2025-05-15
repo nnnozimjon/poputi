@@ -1,14 +1,19 @@
 import apiClient from '@/hooks/apiClient';
 import { useQuery } from '@tanstack/react-query';
 
+
+interface carDetails {
+  id: number;
+  name: string;
+}
 // Define the DriverDetails interface
 interface DriverDetails {
   user_id: string;
   plate_number: string;
-  car_color: string | null;
-  car_body_type: string | null;
-  car_brand: string | null;
-  car_model: string | null;
+  car_color: carDetails;
+  car_body_type: carDetails;
+  car_brand: carDetails;
+  car_model: carDetails;
 }
 
 // Fetch function for driver details

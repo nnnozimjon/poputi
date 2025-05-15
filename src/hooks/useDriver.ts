@@ -25,6 +25,11 @@ const createDriver = async (driverData: CreateDriverDto): Promise<{driver: Drive
   return data;
 };
 
+const updateDriver = async (driverData: CreateDriverDto): Promise<{driver: Driver, token: string}> => {
+  const { data } = await apiClient.put('/drivers/update', driverData);
+  return data;
+};  
+
 // Custom Hook
 export function useDriver() {
   const queryClient = useQueryClient();
@@ -37,3 +42,15 @@ export function useDriver() {
     },
   });
 }
+
+export function useUpdateDriver() {
+  const queryClient = useQueryClient();
+
+  return useMutation<{driver: Driver, token: string}, Error, CreateDriverDto>({
+    mutationFn: updateDriver,
+    onSuccess: () => {
+      // Invalidate and refetch the drivers query after a successful creation
+      queryClient.invalidateQueries({ queryKey: ['drivers'] });
+    },
+  });
+}   

@@ -1,14 +1,29 @@
+import { Text } from "@mantine/core";
+
 interface Props {
   label: string;
   children?: React.ReactNode;
   className?: string;
-  labelStyle?: string
+  labelStyle?: string;
+  icon?: JSX.Element;
 }
-export const LabeledContainer = ({ label, className, children, labelStyle = '' }: Props) => {
+
+export const LabeledContainer = ({
+  label,
+  className,
+  children,
+  labelStyle = "",
+  icon,
+}: Props) => {
   return (
-    <div className={`border-2 border-solid border-white-highlight ${className}`}>
-      <div className={`py-3 text-center bg-secondary text-gray-dark text-xl font-semibold ${labelStyle}`}>{label}</div>
-      <div className="p-4">{children}</div>
+    <div className={`${className}`}>
+      <div
+        className={`flex justify-between ${labelStyle}`}
+      >
+        <Text className="text-xl font-semibold">{label}</Text>
+        {icon}
+      </div>
+      <div className="py-2">{children}</div>
     </div>
   );
 };

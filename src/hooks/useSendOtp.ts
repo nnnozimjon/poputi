@@ -2,9 +2,7 @@ import apiClient from "@/hooks/apiClient";
 import { useMutation } from "@tanstack/react-query";
 
 interface SendOtp {
-  phone?: number;
-  email?: string;
-  fullname?: string;
+  phone_number: string;
 }
 
 // Fetch function for cities

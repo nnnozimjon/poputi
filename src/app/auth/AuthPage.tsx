@@ -5,53 +5,36 @@ import { Button, Flex, InputBase, PinInput } from "@mantine/core";
 import Link from "next/link";
 import { useState } from "react";
 import { setCookie } from "cookies-next";
-import { loginSuccess } from "@/store/slices";
-import { useDispatch } from "react-redux";
+import { useSendOtp, useUserLogin } from "@/hooks";
 import { decryptToken } from "@/utils";
-import { useSendOtp, useVerifyOtp } from "@/hooks";
+import { useDispatch } from "react-redux";
+import { loginSuccess } from "@/store/slices";
+import { toast } from "react-toastify";
 
 export default function AuthPage() {
   const [view, setView] = useState<"auth" | "otp">("auth");
-  const [login, setLogin] = useState({ type: "", value: "" });
-  const [otpCode, setOtpCode] = useState("");
+  const [loginForm, setLoginForm] = useState({
+    phone_number: "",
+    otp_code: "",
+  });
+
+  const dispatch = useDispatch();
   const [loading, setLoading] = useState(false);
 
   const sendOtpMutation = useSendOtp();
-  const verifyOtpMutation = useVerifyOtp();
-
-  const dispatch = useDispatch();
-
-  const identifyInputType = (input: string) => {
-    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-    const phoneRegex = /^\+992\d{9}$/; // +992 followed by 9 digits
-
-    if (emailRegex.test(input)) {
-      return "email";
-    } else if (phoneRegex.test(input)) {
-      return "phone_number";
-    } else {
-      return "invalid";
-    }
-  };
-
-  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const value = e.target.value;
-    const type = identifyInputType(value);
-    setLogin({ type, value });
-  };
+  const { mutate: loginUser } = useUserLogin();
 
   const handleSendOtp = () => {
     setLoading(true);
-    identifyInputType(login.value);
     sendOtpMutation.mutate(
-      { [login.type]: login?.value },
+      { phone_number: loginForm.phone_number },
       {
-        onSuccess: (data) => {
+        onSuccess: () => {
           setLoading(false);
           setView("otp");
         },
         onError: (error) => {
-          console.error("Failed to send OTP", error);
+          toast.warning((error as any).response.data?.message);
         },
       }
     );
@@ -59,16 +42,15 @@ export default function AuthPage() {
 
   const handleVerifyOtp = () => {
     setLoading(true);
-    verifyOtpMutation.mutate(
+    loginUser(
       {
-        login: login.value, otp: otpCode,
-        fullname: ""
+        phone_number: loginForm.phone_number,
+        otp_code: loginForm.otp_code,
       },
       {
         onSuccess: (data) => {
           setLoading(false);
           setCookie("access_token", data?.token);
-
           const decryptedData = decryptToken(data.token);
 
           setTimeout(() => {
@@ -77,7 +59,7 @@ export default function AuthPage() {
           }, 1000);
         },
         onError: (error) => {
-          console.error("OTP verification failed", error);
+          toast.warning((error as any).response.data?.message);
         },
       }
     );
@@ -104,14 +86,16 @@ export default function AuthPage() {
           {view === "auth" && (
             <div className="w-full gap-4 flex flex-col items-center">
               <InputBase
-                placeholder={"Email / Номер телефона"}
+                placeholder={"Номер телефона"}
                 className="w-full md:w-[400px]"
                 classNames={{
                   input: "h-[50px] rounded-[16px]",
                   section: "p-2",
                 }}
-                value={login?.value}
-                onChange={handleInputChange}
+                value={loginForm.phone_number}
+                onChange={(e) =>
+                  setLoginForm({ ...loginForm, phone_number: e.target.value })
+                }
               />
               <Button
                 onClick={handleSendOtp}
@@ -128,7 +112,9 @@ export default function AuthPage() {
               <PinInput
                 size="lg"
                 length={6}
-                onChange={(value) => setOtpCode(value)}
+                onChange={(value) =>
+                  setLoginForm({ ...loginForm, otp_code: value })
+                }
               />
               <Button
                 onClick={handleVerifyOtp}

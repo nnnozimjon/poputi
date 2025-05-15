@@ -1,84 +1,150 @@
 "use client";
 
 import { Logo } from "@/components/logo/logo";
-import { Button, Flex, InputBase, PinInput } from "@mantine/core";
+import { ActionIcon, Button, Flex } from "@mantine/core";
 import Link from "next/link";
 import { useState } from "react";
-import { setCookie } from "cookies-next";
-import { loginSuccess } from "@/store/slices";
-import { useDispatch } from "react-redux";
-import { decryptToken } from "@/utils";
-import { useSendOtp, useVerifyOtp } from "@/hooks";
+import { CarDetails, CarSeats, Otp, UserInfo } from "./components";
+import { FaArrowLeft } from "react-icons/fa6";
+import { useAppSelector } from "@/store/store";
+import { useCheckUser, useSendOtp, useUserRegisterQuery } from "@/hooks";
+import { toast } from "react-toastify";
 
 export default function RegistrationPage() {
-  const [view, setView] = useState<"register" | "otp">("register");
-  const [login, setLogin] = useState({ type: "", value: "" });
-  const [username, setUsername] = useState("");
-  const [otpCode, setOtpCode] = useState("");
-  const [loading, setLoading] = useState(false);
+  const user = useAppSelector((state) => state.user);
 
-  const sendOtpMutation = useSendOtp();
-  const verifyOtpMutation = useVerifyOtp();
+  const { mutate } = useUserRegisterQuery();
+  const { mutate: sendOtp } = useSendOtp();
+  const { mutate: checkUser } = useCheckUser();
 
-  const dispatch = useDispatch();
+  const steps = ["userInfo", "carDetails", "carSeats", "otp"];
+  const [stepIndex, setStepIndex] = useState(0);
+  const currentStep = steps[stepIndex];
 
-  const identifyInputType = (input: string) => {
-    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-    const phoneRegex = /^\+992\d{9}$/; // +992 followed by 9 digits
+  const validateStep = () => {
+    const data = currentStep;
 
-    if (emailRegex.test(input)) {
-      return "email";
-    } else if (phoneRegex.test(input)) {
-      return "phone_number";
+    switch (data) {
+      case "userInfo":
+        return (
+          userInfo.phoneNumber && userInfo.username && userInfo.streetAddress
+        );
+      case "carDetails":
+        return (
+          carDetails.car_body_type_id &&
+          carDetails.car_brand_id &&
+          carDetails.car_model_id &&
+          carDetails.plate_number &&
+          carDetails.car_color_id
+        );
+      case "carSeats":
+        return carSeats.length > 1;
+      case "otp":
+        return otpCode.length === 6;
+      default:
+        return false;
+    }
+  };
+  const [userInfo, setUserInfo] = useState({
+    username: "",
+    phoneNumber: "",
+    streetAddress: "",
+    croppedImage: null,
+  });
+  const initialFormData = {
+    user_id: user?.user?.id ?? "",
+    plate_number: "",
+    car_color_id: 0,
+    car_body_type_id: 0,
+    car_brand_id: 0,
+    car_model_id: 0,
+  };
+  const [carDetails, setCarDetails] = useState(initialFormData);
+  const seats = [
+    [
+      { id: 1, isDriver: true },
+      { id: 2, isDriver: false },
+    ],
+    [
+      { id: 3, isDriver: false },
+      { id: 4, isDriver: false },
+      { id: 5, isDriver: false },
+    ],
+  ];
+  const [carSeats, setCarSeats] = useState(seats);
+  const [otpCode, setOtpCode] = useState<string>("");
+
+  const handleNext = () => {
+    if (!validateStep()) {
+      toast.info("Пожалуйста, заполните все обязательные поля.");
+      return;
+    }
+
+    const isLastStep = stepIndex === steps.length - 1;
+
+    if (currentStep === "userInfo") {
+      checkUser(userInfo.phoneNumber, {
+        onSuccess: () => {
+          setStepIndex(stepIndex + 1);
+        },
+        onError: (error) => {
+          toast.warning(
+            (error as any).response?.data?.message ||
+              "Ошибка при проверке пользователя"
+          );
+        },
+      });
+      return;
+    }
+
+    if (currentStep === "carSeats") {
+      sendOtp({ phone_number: userInfo.phoneNumber });
+    }
+
+    if (isLastStep) {
+      handleSubmit();
     } else {
-      return "invalid";
+      setStepIndex(stepIndex + 1);
     }
   };
 
-  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const value = e.target.value;
-    const type = identifyInputType(value);
-    setLogin({ type, value });
+  const handleBack = () => {
+    if (stepIndex > 0) {
+      setStepIndex(stepIndex - 1);
+    }
   };
 
-  const handleSendOtp = () => {
-    setLoading(true);
-    identifyInputType(login.value);
-    sendOtpMutation.mutate(
-      { [login.type]: login?.value, fullname: username },
-      {
-        onSuccess: (data) => {
-          setLoading(false);
-          setView("otp");
-        },
-        onError: (error) => {
-          console.error("Failed to send OTP", error);
-        },
-      }
+  const handleSubmit = () => {
+    const mappedSeats = carSeats.flatMap((group, rowIndex) =>
+      group.map((seat, columnIndex) => ({
+        seat_row: rowIndex + 1,
+        seat_column: columnIndex + 1,
+        is_driver_seat: seat.isDriver,
+      }))
     );
-  };
 
-  const handleVerifyOtp = () => {
-    setLoading(true);
-    verifyOtpMutation.mutate(
-      { login: login.value, otp: otpCode, fullname: username },
-      {
-        onSuccess: (data) => {
-          setLoading(false);
-          setCookie("access_token", data?.token);
+    const createUserForm = new FormData();
+    createUserForm.append("username", userInfo.username);
+    createUserForm.append("phone_number", userInfo.phoneNumber);
+    createUserForm.append("street_address", userInfo.streetAddress);
 
-          const decryptedData = decryptToken(data.token);
+    if (userInfo.croppedImage) {
+      createUserForm.append("avatar_image", userInfo.croppedImage as Blob);
+    }
 
-          setTimeout(() => {
-            dispatch(loginSuccess(decryptedData));
-            window.location.replace("/");
-          }, 1000);
-        },
-        onError: (error) => {
-          console.error("OTP verification failed", error);
-        },
-      }
-    );
+    createUserForm.append("car_details", JSON.stringify(carDetails));
+    createUserForm.append("car_seats", JSON.stringify(mappedSeats));
+    createUserForm.append("otp_code", otpCode);
+
+    mutate(createUserForm, {
+      onSuccess: () => {
+        toast.success("Пользователь успешно зарегистрирован");
+        window.location.replace("/auth");
+      },
+      onError: (error) => {
+        toast.warning((error as any).response.data?.message);
+      },
+    });
   };
 
   return (
@@ -92,61 +158,43 @@ export default function RegistrationPage() {
         >
           <Logo />
         </svg>
-
         <Flex
           className="w-full px-4"
           gap={"md"}
           direction={"column"}
           align={"center"}
         >
-          {view === "register" && (
-            <div className="w-full gap-4 flex flex-col items-center">
-              <InputBase
-                placeholder={"Имя"}
-                className="w-full md:w-[400px]"
-                classNames={{
-                  input: "h-[50px] rounded-[16px]",
-                  section: "p-2",
-                }}
-                value={username}
-                onChange={(e) => setUsername(e.target.value)}
-              />
-              <InputBase
-                placeholder={"Email / Номер телефона"}
-                className="w-full md:w-[400px]"
-                classNames={{
-                  input: "h-[50px] rounded-[16px]",
-                  section: "p-2",
-                }}
-                value={login?.value}
-                onChange={handleInputChange}
-              />
-              <Button
-                onClick={handleSendOtp}
-                variant="filled"
-                className="bg-dark-blue hover:bg-dark-blue w-full md:w-[400px]"
-                loading={loading}
-              >
-                Регистрация
-              </Button>
-            </div>
+          {currentStep === "userInfo" && (
+            <UserInfo userInfo={userInfo} setUserInfo={setUserInfo} />
           )}
-          {view === "otp" && (
-            <div className="w-full flex flex-col items-center gap-4 mt-4">
-              <PinInput
-                size="lg"
-                length={6}
-                onChange={(value) => setOtpCode(value)}
-              />
-              <Button
-                onClick={handleVerifyOtp}
-                variant="filled"
-                className="bg-dark-blue hover:bg-dark-blue w-full md:w-[400px]"
-              >
-                Регистрация
-              </Button>
-            </div>
+          {currentStep === "carDetails" && (
+            <CarDetails carDetails={carDetails} setCarDetails={setCarDetails} />
           )}
+          {currentStep === "carSeats" && (
+            <CarSeats carSeats={carSeats} setCarSeats={setCarSeats} />
+          )}
+          {currentStep === "otp" && (
+            <Otp otpCode={otpCode} setOtpCode={setOtpCode} />
+          )}
+
+          <div className="flex gap-2 items-center w-full md:w-[400px]">
+            {currentStep !== "userInfo" && (
+              <ActionIcon
+                onClick={handleBack}
+                className="bg-dark-blue hover:bg-dark-blue size-[40px] shrink-0"
+              >
+                <FaArrowLeft />
+              </ActionIcon>
+            )}
+
+            <Button
+              onClick={handleNext}
+              variant="filled"
+              className="bg-dark-blue hover:bg-dark-blue h-[40px] w-full"
+            >
+              Дальше
+            </Button>
+          </div>
 
           <div className="flex gap-2">
             <p className="text-center select-none">Есть аккаунта? </p>

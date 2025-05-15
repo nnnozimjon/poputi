@@ -46,7 +46,7 @@ export const SearchTrips = () => {
       whileInView={"onscreen"}
       viewport={{ once: true, amount: 0.8 }}
       variants={scrollAnimation}
-      className="w-full bg-white rounded-lg p-2 shadow-lg"
+      className="w-full bg-white rounded-lg shadow-lg"
       id="search-trips2"
     >
       <div className="grid grid-cols-12 md:flex gap-4 md:items-center">
@@ -54,7 +54,7 @@ export const SearchTrips = () => {
           placeholder="Откуда"
           className="w-full col-span-12"
           classNames={{
-            input: "py-5 border-none",
+            input: "border-none",
             section: "text-xl text-main",
           }}
           leftSection={<FaMapLocationDot />}
@@ -66,7 +66,7 @@ export const SearchTrips = () => {
           placeholder="Куда"
           className="w-full col-span-12"
           classNames={{
-            input: "py-5 border-none",
+            input: "border-none",
             section: "text-xl text-main",
           }}
           data={cities || []}
@@ -82,7 +82,7 @@ export const SearchTrips = () => {
           className="w-full col-span-12"
           minDate={new Date()}
           classNames={{
-            input: "py-5 border-none",
+            input: "border-none",
             section: "text-xl text-main",
           }}
         />
@@ -91,7 +91,7 @@ export const SearchTrips = () => {
           placeholder="Пасажири"
           className="w-full col-span-12"
           classNames={{
-            input: "py-5 border-none",
+            input: "border-none",
             section: "text-xl text-main",
           }}
           data={["1", "2", "3", "4"]}
@@ -99,7 +99,7 @@ export const SearchTrips = () => {
           onChange={(value) => setPassengers(value)}
         />
         <Button
-          className="w-full bg-dark-blue hover:bg-dark-blue z-10 col-span-12"
+          className="w-full bg-dark-blue hover:bg-dark-blue z-10 col-span-12 h-[56px]"
           leftSection={<IoSearch />}
           onClick={handleSearch}
         >

@@ -11,14 +11,26 @@ import getScrollAnimation from "@/utils/getScrollAnimation";
 import { Container } from "@mantine/core";
 import { motion } from "framer-motion";
 import { useMemo } from "react";
+import SkyImage from "@/assets/carpool.svg";
+import { SearchTrips } from "@/components/searchTrips";
 
 export default function HomePage() {
   const scrollAnimation = useMemo(() => getScrollAnimation(), []);
 
   return (
     <div>
+      {/* <div className="relative">
+        <img
+          src={SkyImage.src}
+          alt=""
+          className="w-full h-[272px] object-cover object-center"
+        />
+        <Container className="absolute -bottom-6 right-48 w-full " size={"xl"}>
+          <SearchTrips /> 
+        </Container>
+      </div> */}
       <MainPageTopContent />
-       <VehicleTypes />
+      <VehicleTypes />
       <Container size={"xl"} className="mt-4 md:mt-20">
         <PopularLocations />
       </Container>

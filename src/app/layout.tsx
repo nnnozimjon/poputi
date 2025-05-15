@@ -2,7 +2,9 @@
 
 import "@mantine/dates/styles.css";
 import "@mantine/core/styles.css";
+import '@mantine/carousel/styles.css';
 import "./globals.css";
+
 import { MantineProvider } from "@mantine/core";
 import { AppHeader } from "@/components/app-header/app-header";
 import { AppFooter } from "@/components/app-footer/app-footer";

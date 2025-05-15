@@ -1,27 +1,24 @@
+import { Button, Text } from "@mantine/core";
 import { LabeledContainer } from "../container";
-import { Stepper } from "@mantine/core";
+import { TbEPassport } from "react-icons/tb";
 
 export const UserLevel = () => {
   return (
     <LabeledContainer
-      label={"Ваш уровень"}
-      className="col-span-auto md:col-span-8 h-fit"
+      label={"Driver License"}
+      className="col-span-full md:col-span-4 h-fit"
+      icon={<TbEPassport className="text-secondary-200 size-5" />}
     >
-      <Stepper
-        classNames={{
-          stepCompletedIcon: "bg-main rounded-full",
-          stepIcon: "border-main",
-          separator: "bg-main",
-        }}
-        size="sm"
-        active={1}
-      >
-        <Stepper.Step description="Новичок" />
-        <Stepper.Step description="Уверенный" />
-        <Stepper.Step description="Опытный" />
-        <Stepper.Step description="Эксперт" />
-        <Stepper.Step description="Амбассадор" />
-      </Stepper>
+        <Text className="text-secondary-200 text-sm">Passport Number</Text>
+        <Text className="mb-4">N/A</Text>
+
+        <Text className="text-secondary-200 text-sm">Issue Date</Text>
+        <Text className="mb-4">N/A</Text>
+
+        <Text className="text-secondary-200 text-sm">Expiry Date</Text>
+        <Text className="mb-4">N/A</Text>
+      
+      <Button variant="outline" className="w-full">Upload License Copy</Button>
     </LabeledContainer>
   );
 };

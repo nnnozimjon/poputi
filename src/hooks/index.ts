@@ -10,3 +10,7 @@ export * from './useCarModel';
 export * from './useCarSeats';
 export * from './useTrips';
 export * from './useBooking';
+export * from './usePreferences';
+export * from './useUserRegister';
+export * from './useUserLogin';
+

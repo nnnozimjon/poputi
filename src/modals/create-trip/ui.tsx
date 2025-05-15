@@ -6,6 +6,7 @@ import {
   Button,
   Checkbox,
   Group,
+  Input,
   Modal,
   Select,
   Text,
@@ -41,7 +42,7 @@ type Trip = {
 };
 
 export const CreateTripModal = (props: Props) => {
-  const user = useAppSelector((state) => state.user)
+  const user = useAppSelector((state) => state.user);
   const { mutate } = useCreateTrip();
 
   const { data, isSuccess } = useFindAllDriverSeats(user.isAuthenticated);
@@ -70,10 +71,12 @@ export const CreateTripModal = (props: Props) => {
     }));
   };
 
-  const updateSeatStatus = (id: number) => {
+  const updateSeatStatus = (id: number, price?: number) => {
     const updatedSeats: any = seats.map((innerArray: Seat[]) =>
       innerArray.map((seat) =>
-        seat.id === id ? { ...seat, isBooked: !seat.isBooked } : seat
+        seat.id === id
+          ? { ...seat, isBooked: !seat.isBooked, price: price || 0 }
+          : seat
       )
     );
 
@@ -102,18 +105,25 @@ export const CreateTripModal = (props: Props) => {
       .flatMap((group: Seat[]) =>
         group.filter((person) => person.isBooked === false)
       )
-      .map((person) => ({ id: person.id, is_driver: person.is_driver, price: 30 }));
+      .map((person) => ({
+        id: person.id,
+        is_driver: person.is_driver,
+        price: person.price,
+      }));
 
-    mutate({ ...formData, seats: filteredSeats }, {
-      onSuccess: () => {
-        toast.success("Поездка создана успешно");
-        setFormData(initialFormData)
-        props.close()
-      },
-      onError: () => {
-        toast.error("Ошибка при создании поездки");
+    mutate(
+      { ...formData, seats: filteredSeats },
+      {
+        onSuccess: () => {
+          toast.success("Поездка создана успешно");
+          setFormData(initialFormData);
+          props.close();
+        },
+        onError: () => {
+          toast.error("Ошибка при создании поездки");
+        },
       }
-    });
+    );
   };
 
   return (
@@ -209,10 +219,31 @@ export const CreateTripModal = (props: Props) => {
                   </div>
                 ))}
               </div>
+              <Input
+                min="1"
+                type="number"
+                className="w-20"
+                placeholder="Цена"
+                onChange={(e) => {
+                  const updatedPrice = Number(e.target.value);
+                  setSeats((prevSeats: any) =>
+                    prevSeats.map((groupSeats: any, idx: number) =>
+                      idx === groupIndex
+                        ? groupSeats.map((seat: any) => ({
+                            ...seat,
+                            price: updatedPrice,
+                          }))
+                        : groupSeats
+                    )
+                  );
+                }}
+                value={group[0]?.price || ""}
+              />
               <Text />
             </div>
           </Fragment>
         ))}
+
         <Alert className="font-semibold text-xs">
           Все места свободны по умолчанию. Если везете своих пассажиров, нажмите
           на сиденья, чтобы отметить их занятыми. Серые сиденья - заняты!!!
