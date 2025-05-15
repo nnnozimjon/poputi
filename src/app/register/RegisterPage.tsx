@@ -13,7 +13,7 @@ import { toast } from "react-toastify";
 export default function RegistrationPage() {
   const user = useAppSelector((state) => state.user);
 
-  const { mutate, isPending } = useUserRegisterQuery();
+  const { mutateAsync, isPending } = useUserRegisterQuery();
   const { mutate: sendOtp } = useSendOtp();
   const { mutate: checkUser } = useCheckUser();
 
@@ -137,7 +137,7 @@ export default function RegistrationPage() {
     createUserForm.append("otp_code", otpCode);
 
     try {
-      await mutate(createUserForm, {
+      await mutateAsync(createUserForm, {
         onSuccess: () => {
           toast.success("Пользователь успешно зарегистрирован");
           window.location.replace("/auth");
@@ -146,7 +146,7 @@ export default function RegistrationPage() {
     } catch (error: any) {
       toast.warning(error?.response?.data?.message || "Ошибка регистрации");
     }
-  }, [carDetails, carSeats, otpCode, userInfo, mutate]);
+  }, [carDetails, carSeats, otpCode, userInfo, mutateAsync]);
 
   return (
     <div className="py-32 overflow-hidden scrollbar-hide">
