@@ -3,7 +3,7 @@
 import { Logo } from "@/components/logo/logo";
 import { ActionIcon, Button, Flex } from "@mantine/core";
 import Link from "next/link";
-import { useState } from "react";
+import { useCallback, useState } from "react";
 import { CarDetails, CarSeats, Otp, UserInfo } from "./components";
 import { FaArrowLeft } from "react-icons/fa6";
 import { useAppSelector } from "@/store/store";
@@ -13,7 +13,7 @@ import { toast } from "react-toastify";
 export default function RegistrationPage() {
   const user = useAppSelector((state) => state.user);
 
-  const { mutate } = useUserRegisterQuery();
+  const { mutate, isPending } = useUserRegisterQuery();
   const { mutate: sendOtp } = useSendOtp();
   const { mutate: checkUser } = useCheckUser();
 
@@ -114,7 +114,7 @@ export default function RegistrationPage() {
     }
   };
 
-  const handleSubmit = () => {
+  const handleSubmit = useCallback(async () => {
     const mappedSeats = carSeats.flatMap((group, rowIndex) =>
       group.map((seat, columnIndex) => ({
         seat_row: rowIndex + 1,
@@ -136,16 +136,17 @@ export default function RegistrationPage() {
     createUserForm.append("car_seats", JSON.stringify(mappedSeats));
     createUserForm.append("otp_code", otpCode);
 
-    mutate(createUserForm, {
-      onSuccess: () => {
-        toast.success("Пользователь успешно зарегистрирован");
-        window.location.replace("/auth");
-      },
-      onError: (error) => {
-        toast.warning((error as any).response.data?.message);
-      },
-    });
-  };
+    try {
+      await mutate(createUserForm, {
+        onSuccess: () => {
+          toast.success("Пользователь успешно зарегистрирован");
+          window.location.replace("/auth");
+        },
+      });
+    } catch (error: any) {
+      toast.warning(error?.response?.data?.message || "Ошибка регистрации");
+    }
+  }, [carDetails, carSeats, otpCode, userInfo, mutate]);
 
   return (
     <div className="py-32 overflow-hidden scrollbar-hide">
@@ -189,6 +190,7 @@ export default function RegistrationPage() {
 
             <Button
               onClick={handleNext}
+              loading={isPending}
               variant="filled"
               className="bg-dark-blue hover:bg-dark-blue h-[40px] w-full"
             >
