@@ -3,7 +3,7 @@ import { CarLandscapeSvg } from "../carLandscape";
 import { TajikistanMapSvg } from "../tajikistanMap";
 import { SearchTrips } from "../searchTrips";
 import { useState } from "react";
-import { AddCarSeats, CreateTripModal } from "@/modals";
+import { CreateTripModal } from "@/modals";
 import { useAppSelector } from "@/store/store";
 import { redirect } from "@/utils";
 
