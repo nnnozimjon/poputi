@@ -6,6 +6,10 @@ interface RegisterUserResponse {
   userId: string;
 }
 
+interface RegisterPassenger {
+  username: string;
+  phone_number: string;
+}
 // This function accepts FormData and sends it to the backend
 const registerUser = async (
   formData: FormData
@@ -22,6 +26,17 @@ const registerUser = async (
 export function useUserRegisterQuery() {
   return useMutation({
     mutationFn: registerUser,
+  });
+}
+
+const registerPassenger = async (body: RegisterPassenger) => {
+  const { data } = await apiClient.post("users/register-passenger", body);
+  return data;
+};
+
+export function usePassengerRegisterQuery() {
+  return useMutation({
+    mutationFn: registerPassenger,
   });
 }
 

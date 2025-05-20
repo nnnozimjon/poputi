@@ -4,8 +4,14 @@ import { Otp } from "../components";
 import { useCallback, useState } from "react";
 import { FaArrowLeft } from "react-icons/fa6";
 import { toast } from "react-toastify";
+import { formatPhoneNumber } from "@/utils";
+import { useCheckUser, usePassengerRegisterQuery, useSendOtp } from "@/hooks";
 
 export default function PassengerRegisterForm() {
+  const { mutate, isPending } = usePassengerRegisterQuery();
+  const { mutate: sendOtp } = useSendOtp();
+  const { mutate: checkUser } = useCheckUser();
+
   const steps = ["userInfo", "otp"];
   const [stepIndex, setStepIndex] = useState(0);
   const currentStep = steps[stepIndex];
@@ -13,7 +19,7 @@ export default function PassengerRegisterForm() {
   const [otpCode, setOtpCode] = useState<string>("");
   const [userInfo, setUserInfo] = useState({
     username: "",
-    phoneNumber: "",
+    phone_number: "",
   });
 
   const validateStep = () => {
@@ -21,9 +27,7 @@ export default function PassengerRegisterForm() {
 
     switch (data) {
       case "userInfo":
-        return (
-          userInfo.phoneNumber && userInfo.username
-        );
+        return userInfo.phone_number && userInfo.username;
       case "otp":
         return otpCode.length === 6;
       default:
@@ -38,18 +42,18 @@ export default function PassengerRegisterForm() {
     }
     const isLastStep = stepIndex === steps.length - 1;
     if (currentStep === "userInfo") {
-      // checkUser(userInfo.phoneNumber, {
-      //   onSuccess: () => {
-      //     setStepIndex(stepIndex + 1);
-      // sendOtp({ phone_number: userInfo.phoneNumber });
-      //   },
-      //   onError: (error) => {
-      //     toast.warning(
-      //       (error as any).response?.data?.message ||
-      //         "Ошибка при проверке пользователя"
-      //     );
-      //   },
-      // });
+      checkUser(userInfo.phone_number, {
+        onSuccess: () => {
+          setStepIndex(stepIndex + 1);
+          sendOtp({ phone_number: userInfo.phone_number, type: 'register' });
+        },
+        onError: (error) => {
+          toast.warning(
+            (error as any).response?.data?.message ||
+              "Ошибка при проверке пользователя"
+          );
+        },
+      });
       return;
     }
     if (isLastStep) {
@@ -66,34 +70,17 @@ export default function PassengerRegisterForm() {
   };
 
   const handleSubmit = useCallback(async () => {
-    //   const mappedSeats = carSeats.flatMap((group, rowIndex) =>
-    //     group.map((seat, columnIndex) => ({
-    //       seat_row: rowIndex + 1,
-    //       seat_column: columnIndex + 1,
-    //       is_driver_seat: seat.isDriver,
-    //     }))
-    //   );
-    //   const createUserForm = new FormData();
-    //   createUserForm.append("username", userInfo.username);
-    //   createUserForm.append("phone_number", userInfo.phoneNumber);
-    //   createUserForm.append("street_address", userInfo.streetAddress);
-    //   if (userInfo.croppedImage) {
-    //     createUserForm.append("avatar_image", userInfo.croppedImage as Blob);
-    //   }
-    //   createUserForm.append("car_details", JSON.stringify(carDetails));
-    //   createUserForm.append("car_seats", JSON.stringify(mappedSeats));
-    //   createUserForm.append("otp_code", otpCode);
-    //   try {
-    //     await mutateAsync(createUserForm, {
-    //       onSuccess: () => {
-    //         toast.success("Пользователь успешно зарегистрирован");
-    //         window.location.replace("/auth");
-    //       },
-    //     });
-    //   } catch (error: any) {
-    //     toast.warning(error?.response?.data?.message || "Ошибка регистрации");
-    //   }
-  }, []);
+    try {
+      await mutate(userInfo, {
+        onSuccess: () => {
+          toast.success("Пользователь успешно зарегистрирован");
+          window.location.replace("/auth");
+        },
+      });
+    } catch (error: any) {
+      toast.warning(error?.response?.data?.message || "Ошибка регистрации");
+    }
+  }, [mutate, userInfo]);
 
   return (
     <Flex
@@ -130,11 +117,11 @@ export default function PassengerRegisterForm() {
               section: "p-2",
               label: "text-gray-dark",
             }}
-            value={userInfo?.phoneNumber}
+            value={userInfo?.phone_number}
             onChange={(e) =>
               setUserInfo((prev: any) => ({
                 ...prev,
-                phoneNumber: e.target.value,
+                phone_number: formatPhoneNumber(e.target.value),
               }))
             }
           />
@@ -156,7 +143,7 @@ export default function PassengerRegisterForm() {
 
         <Button
           onClick={handleNext}
-          // loading={isPending}
+          loading={isPending}
           variant="filled"
           className="bg-dark-blue hover:bg-dark-blue h-[40px] w-full"
         >
