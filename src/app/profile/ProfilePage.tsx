@@ -1,6 +1,6 @@
 "use client";
 
-import { Button, Container, Text } from "@mantine/core";
+import { Container } from "@mantine/core";
 import {
   UserCar,
   UserDetails,

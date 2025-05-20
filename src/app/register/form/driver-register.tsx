@@ -1,18 +1,13 @@
 "use client";
 
-import { Logo } from "@/components/logo/logo";
 import { ActionIcon, Button, Flex } from "@mantine/core";
-import Link from "next/link";
 import { useCallback, useState } from "react";
-import { CarDetails, CarSeats, Otp, UserInfo } from "./components";
+import { CarDetails, CarSeats, Otp, UserInfo } from "../components";
 import { FaArrowLeft } from "react-icons/fa6";
-import { useAppSelector } from "@/store/store";
 import { useCheckUser, useSendOtp, useUserRegisterQuery } from "@/hooks";
 import { toast } from "react-toastify";
 
-export default function RegistrationPage() {
-  const user = useAppSelector((state) => state.user);
-
+export default function DriverRegisterForm() {
   const { mutateAsync, isPending } = useUserRegisterQuery();
   const { mutate: sendOtp } = useSendOtp();
   const { mutate: checkUser } = useCheckUser();
@@ -52,7 +47,6 @@ export default function RegistrationPage() {
     croppedImage: null,
   });
   const initialFormData = {
-    user_id: user?.user?.id ?? "",
     plate_number: "",
     car_color_id: 0,
     car_body_type_id: 0,
@@ -98,7 +92,7 @@ export default function RegistrationPage() {
     }
 
     if (currentStep === "carSeats") {
-      sendOtp({ phone_number: userInfo.phoneNumber });
+      sendOtp({ phone_number: userInfo.phoneNumber, type: 'register' });
     }
 
     if (isLastStep) {
@@ -149,66 +143,44 @@ export default function RegistrationPage() {
   }, [carDetails, carSeats, otpCode, userInfo, mutateAsync]);
 
   return (
-    <div className="py-32 overflow-hidden scrollbar-hide">
-      <Flex direction={"column"} className="w-full" align={"center"}>
-        <svg
-          width={150}
-          height={150}
-          viewBox="0 0 380 317"
-          className="text-main"
+    <Flex
+      className="w-full p-4"
+      gap={"md"}
+      direction={"column"}
+      align={"center"}
+    >
+      {currentStep === "userInfo" && (
+        <UserInfo userInfo={userInfo} setUserInfo={setUserInfo} />
+      )}
+      {currentStep === "carDetails" && (
+        <CarDetails carDetails={carDetails} setCarDetails={setCarDetails} />
+      )}
+      {currentStep === "carSeats" && (
+        <CarSeats carSeats={carSeats} setCarSeats={setCarSeats} />
+      )}
+      {currentStep === "otp" && (
+        <Otp otpCode={otpCode} setOtpCode={setOtpCode} resend={() => sendOtp({ phone_number: userInfo.phoneNumber, type: 'register' })} />
+      )}
+
+      <div className="flex gap-2 items-center w-full md:w-[400px]">
+        {currentStep !== "userInfo" && (
+          <ActionIcon
+            onClick={handleBack}
+            className="bg-dark-blue hover:bg-dark-blue size-[40px] shrink-0"
+          >
+            <FaArrowLeft />
+          </ActionIcon>
+        )}
+
+        <Button
+          onClick={handleNext}
+          loading={isPending}
+          variant="filled"
+          className="bg-dark-blue hover:bg-dark-blue h-[40px] w-full"
         >
-          <Logo />
-        </svg>
-        <Flex
-          className="w-full px-4"
-          gap={"md"}
-          direction={"column"}
-          align={"center"}
-        >
-          {currentStep === "userInfo" && (
-            <UserInfo userInfo={userInfo} setUserInfo={setUserInfo} />
-          )}
-          {currentStep === "carDetails" && (
-            <CarDetails carDetails={carDetails} setCarDetails={setCarDetails} />
-          )}
-          {currentStep === "carSeats" && (
-            <CarSeats carSeats={carSeats} setCarSeats={setCarSeats} />
-          )}
-          {currentStep === "otp" && (
-            <Otp otpCode={otpCode} setOtpCode={setOtpCode} />
-          )}
-
-          <div className="flex gap-2 items-center w-full md:w-[400px]">
-            {currentStep !== "userInfo" && (
-              <ActionIcon
-                onClick={handleBack}
-                className="bg-dark-blue hover:bg-dark-blue size-[40px] shrink-0"
-              >
-                <FaArrowLeft />
-              </ActionIcon>
-            )}
-
-            <Button
-              onClick={handleNext}
-              loading={isPending}
-              variant="filled"
-              className="bg-dark-blue hover:bg-dark-blue h-[40px] w-full"
-            >
-              Дальше
-            </Button>
-          </div>
-
-          <div className="flex gap-2">
-            <p className="text-center select-none">Есть аккаунта? </p>
-            <Link
-              href={"/auth"}
-              className="text-dark-blue cursor-pointer no-underline font-medium"
-            >
-              Войти
-            </Link>
-          </div>
-        </Flex>
-      </Flex>
-    </div>
+          Дальше
+        </Button>
+      </div>
+    </Flex>
   );
 }

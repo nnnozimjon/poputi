@@ -25,7 +25,7 @@ export const UserInfo = () =>{
       <div className="flex gap-4 items-center">
         <LuPhone className="text-secondary-200" />
         <div>
-          <Text className="text-sm text-secondary-200">Phone</Text>
+          <Text className="text-sm text-secondary-200">Телефон</Text>
           <Text>{user?.user?.phone_number || 'N/A'}</Text>
         </div>
       </div>

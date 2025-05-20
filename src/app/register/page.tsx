@@ -1,5 +1,5 @@
 import { Metadata } from "next";
-import RegistrationPage from "./RegisterPage";
+import { MainRegisterPage } from "./register-page";
 
 export const metadata: Metadata = {
     icons: './favicon.png',
@@ -16,5 +16,5 @@ export const metadata: Metadata = {
 };
 
 export default function Page() {
-    return <RegistrationPage />
+    return <MainRegisterPage />;
 }

@@ -1,12 +1,12 @@
 "use client";
 
 import { Logo } from "@/components/logo/logo";
-import { Button, Flex, InputBase, PinInput } from "@mantine/core";
+import { Button, Flex, InputBase, PinInput, Text } from "@mantine/core";
 import Link from "next/link";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { setCookie } from "cookies-next";
 import { useSendOtp, useUserLogin } from "@/hooks";
-import { decryptToken } from "@/utils";
+import { decryptToken, formatPhoneNumber } from "@/utils";
 import { useDispatch } from "react-redux";
 import { loginSuccess } from "@/store/slices";
 import { toast } from "react-toastify";
@@ -18,6 +18,29 @@ export default function AuthPage() {
     otp_code: "",
   });
 
+  const [countdown, setCountdown] = useState(120);
+  const [isResendEnabled, setIsResendEnabled] = useState(false);
+
+  useEffect(() => {
+    if (countdown === 0) {
+      setIsResendEnabled(true);
+      return;
+    }
+
+    const timer = setInterval(() => {
+      setCountdown((prev) => prev - 1);
+    }, 1000);
+
+    return () => clearInterval(timer);
+  }, [countdown]);
+
+  const handleResend = () => {
+    if (!isResendEnabled) return;
+    handleSendOtp();
+    setCountdown(120);
+    setIsResendEnabled(false);
+  };
+
   const dispatch = useDispatch();
   const [loading, setLoading] = useState(false);
 
@@ -27,13 +50,14 @@ export default function AuthPage() {
   const handleSendOtp = () => {
     setLoading(true);
     sendOtpMutation.mutate(
-      { phone_number: loginForm.phone_number },
+      { phone_number: loginForm.phone_number, type: "login" },
       {
         onSuccess: () => {
           setLoading(false);
           setView("otp");
         },
         onError: (error) => {
+          setLoading(false);
           toast.warning((error as any).response.data?.message);
         },
       }
@@ -50,7 +74,9 @@ export default function AuthPage() {
       {
         onSuccess: (data) => {
           setLoading(false);
-          setCookie("access_token", data?.token);
+          setCookie("access_token", data?.token, {
+            maxAge: 60 * 60 * 24 * 365,
+          });
           const decryptedData = decryptToken(data.token);
 
           setTimeout(() => {
@@ -94,7 +120,10 @@ export default function AuthPage() {
                 }}
                 value={loginForm.phone_number}
                 onChange={(e) =>
-                  setLoginForm({ ...loginForm, phone_number: e.target.value })
+                  setLoginForm({
+                    ...loginForm,
+                    phone_number: formatPhoneNumber(e.target.value),
+                  })
                 }
               />
               <Button
@@ -109,6 +138,21 @@ export default function AuthPage() {
           )}
           {view === "otp" && (
             <div className="w-full flex flex-col items-center gap-4 mt-4">
+              <Text className="text-secondary-200 my-0 py-0">
+                Мы отправили вам смс-код для подтверждения
+              </Text>
+
+              <Button
+                variant="transparent"
+                className="my-0"
+                onClick={handleResend}
+                disabled={!isResendEnabled}
+              >
+                {isResendEnabled
+                  ? "Отправить еще раз"
+                  : `Отправить еще раз (${countdown}s)`}
+              </Button>
+
               <PinInput
                 size="lg"
                 length={6}

@@ -3,6 +3,7 @@ import { useMutation } from "@tanstack/react-query";
 
 interface SendOtp {
   phone_number: string;
+  type?: "register" | "login";
 }
 
 // Fetch function for cities

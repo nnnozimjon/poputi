@@ -70,7 +70,9 @@ export const AddCarModal = (props: Props) => {
     mutate(formData, {
       onSuccess: (data) => {
         toast.success("Автомобиль добавлен успешно");
-        setCookie("access_token", data?.token);
+        setCookie("access_token", data?.token, {
+          maxAge: 60 * 60 * 24 * 365,
+        });
         const decryptedData = decryptToken(data.token);
 
         setTimeout(() => {

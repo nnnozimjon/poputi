@@ -104,7 +104,9 @@ export const AddCarSeats = (props: Props) => {
       {
         onSuccess: (data) => {
           toast.success("Автомобильные сиденья добавлены успешно");
-          setCookie("access_token", data?.token);
+          setCookie("access_token", data?.token, {
+            maxAge: 60 * 60 * 24 * 365,
+          });
           const decryptedData = decryptToken(data.token);
 
           setTimeout(() => {
