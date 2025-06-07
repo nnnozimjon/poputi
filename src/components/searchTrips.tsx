@@ -99,7 +99,7 @@ export const SearchTrips = () => {
           onChange={(value) => setPassengers(value)}
         />
         <Button
-          className="w-full bg-dark-blue hover:bg-dark-blue z-10 col-span-12 h-[56px]"
+          className="w-full bg-main hover:bg-blue-dark z-10 col-span-12 h-[56px]"
           leftSection={<IoSearch />}
           onClick={handleSearch}
         >

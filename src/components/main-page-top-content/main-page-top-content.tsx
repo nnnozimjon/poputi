@@ -89,9 +89,9 @@ export const MainPageTopContent = () => {
         </div>
 
         {/* Search Trips */}
-        <div className="order-1 md:order-3 col-span-12 w-full">
+        {/* <div className="order-1 md:order-3 col-span-12 w-full">
           <SearchTrips />
-        </div>
+        </div> */}
       </Container>
 
       <CreateTripModal

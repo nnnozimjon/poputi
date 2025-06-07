@@ -1,6 +1,12 @@
-import { useCities, useCreateTrip, useFindAllDriverSeats } from "@/hooks";
+import {
+  useCities,
+  useCreateTrip,
+  useFindAllDriverSeats,
+  useGetTripById,
+  useUpdateTrip,
+} from "@/hooks";
 import { useAppSelector } from "@/store/store";
-import { mapToSelectOptions } from "@/utils";
+import { convertSeatsToMatrix, mapToSelectOptions } from "@/utils";
 import {
   Alert,
   Button,
@@ -22,13 +28,14 @@ import { toast } from "react-toastify";
 interface Props {
   opened: boolean;
   close: () => void;
-  refetch?: () => void;
+  tripId: string;
+  refetch: () => void;
 }
 
 type Seat = {
   id: number;
   is_driver: boolean;
-  price?: number;
+  price: number;
   isBooked: boolean;
 };
 
@@ -42,10 +49,12 @@ type Trip = {
   seats: Seat[][] | null;
 };
 
-export const CreateTripModal = (props: Props) => {
+export const EditTripModal = (props: Props) => {
   const user = useAppSelector((state) => state.user);
-  const { mutate } = useCreateTrip();
+  const { mutate } = useUpdateTrip();
 
+  const { data: tripPrevData, isSuccess: isSuccessTripPrevData } =
+    useGetTripById(props.tripId);
   const { data, isSuccess } = useFindAllDriverSeats(user.isAuthenticated);
   const { data: cities } = useCities();
 
@@ -97,6 +106,24 @@ export const CreateTripModal = (props: Props) => {
     }
   }, [isSuccess, data]);
 
+  useEffect(() => {
+    if (isSuccessTripPrevData) {
+      const matrixSeats = convertSeatsToMatrix(tripPrevData.car_seats as any);
+
+      setFormData((prev) => ({
+        ...prev,
+        departure_city: tripPrevData.departure_city,
+        destination_city: tripPrevData.destination_city,
+        departure_time: new Date(tripPrevData.departure_time),
+        destination_time: new Date(tripPrevData.destination_time),
+        is_sending_package_available: tripPrevData.is_sending_package_available,
+        description: tripPrevData.description,
+      }));
+
+      setSeats(matrixSeats as any);
+    }
+  }, [tripPrevData, isSuccessTripPrevData]);
+
   const handleSubmit = () => {
     const filteredSeats: Array<{
       id: number;
@@ -109,20 +136,24 @@ export const CreateTripModal = (props: Props) => {
       .map((person) => ({
         id: person.id,
         is_driver: person.is_driver,
-        price: person.price,
+        price: Number(person.price),
       }));
 
+    if (!filteredSeats[0]?.price || !filteredSeats[filteredSeats?.length - 1]?.price) {
+      toast.warning("Напишите цени за место");
+      return;
+    }
+
     mutate(
-      { ...formData, seats: filteredSeats },
+      { payload: { ...formData, seats: filteredSeats }, tripId: props?.tripId },
       {
         onSuccess: () => {
-          toast.success("Поездка создана успешно");
-          setFormData(initialFormData);
-          props?.refetch && props?.refetch();
+          toast.success("Поездка успешно изменено");
+          props.refetch();
           props.close();
         },
         onError: () => {
-          toast.error("Ошибка при создании поездки");
+          toast.error("Ошибка при изменения поездки");
         },
       }
     );
@@ -133,7 +164,7 @@ export const CreateTripModal = (props: Props) => {
       centered
       opened={props.opened}
       onClose={props.close}
-      title="Создать поездку, куда вы едете?"
+      title="Редактировать поездку, куда вы едете?"
       size={"lg"}
       closeOnClickOutside={false}
       overlayProps={{
@@ -216,7 +247,7 @@ export const CreateTripModal = (props: Props) => {
                 {group?.map((seat, seatIndex) => (
                   <div
                     key={seatIndex}
-                    onClick={() => updateSeatStatus(seat.id)}
+                    // onClick={() => updateSeatStatus(seat.id)}
                     className={`border border-solid p-2 rounded-md w-fit flex items-center cursor-pointer justify-center text-2xl ${
                       seat.isBooked || seat.is_driver
                         ? "border-secondary-200 text-secondary-200"
@@ -234,6 +265,7 @@ export const CreateTripModal = (props: Props) => {
                 placeholder="Цена"
                 onChange={(e) => {
                   const updatedPrice = Number(e.target.value);
+                  console.log(group[0]?.price);
                   setSeats((prevSeats: any) =>
                     prevSeats.map((groupSeats: any, idx: number) =>
                       idx === groupIndex
@@ -245,7 +277,7 @@ export const CreateTripModal = (props: Props) => {
                     )
                   );
                 }}
-                value={group[0]?.price || ""}
+                value={group[0]?.price}
               />
               <Text />
             </div>

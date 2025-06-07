@@ -165,7 +165,7 @@ export const AppFooter = () => {
         </Link>
         {isDriver && (
           <Link
-            href={"/#search-trips2"}
+            href={"/my-trips"}
             className="flex flex-col items-center text-white no-underline"
           >
             <FaPlusCircle size={28} />

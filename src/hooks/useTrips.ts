@@ -60,6 +60,13 @@ const createTrip = async (payload: CreateTripPayload) => {
   return data;
 };
 
+const updateTrip = async (payload: CreateTripPayload, tripId: string) => {
+  const { data } = await apiClient.post(`trips/${tripId}`, payload);
+  return data;
+};
+
+
+
 const getTrips = async (
   params?: Record<string, any>
 ): Promise<TripApiResponse> => {
@@ -67,8 +74,18 @@ const getTrips = async (
   return data;
 };
 
+const getMyTrips = async (): Promise<TripApiResponse> => {
+  const { data } = await apiClient.get("trips/my/trips");
+  return data;
+};
+
 const getTripById = async (id: string): Promise<Trip> => {
   const { data } = await apiClient.get(`trips/${id}`);
+  return data;
+};
+
+const getDeleteTripById = async (id: string): Promise<Trip> => {
+  const { data } = await apiClient.delete(`trips/${id}`);
   return data;
 };
 
@@ -84,10 +101,28 @@ export function useCreateTrip() {
   });
 }
 
+export function useUpdateTrip() {
+  const queryClient = useQueryClient();
+
+  return useMutation({
+    mutationFn: ({ payload, tripId }: { payload: CreateTripPayload; tripId: string }) => updateTrip(payload, tripId),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["update/trips"] });
+    },
+  });
+}
+
 export function useGetTrips(params?: Record<string, any>) {
   return useQuery({
     queryKey: ["trips", params],
     queryFn: () => getTrips(params),
+  });
+}
+
+export function useGetMyTrips() {
+  return useQuery({
+    queryKey: ["trips/my/trips"],
+    queryFn: () => getMyTrips(),
   });
 }
 
@@ -96,6 +131,17 @@ export function useGetTripById(id: string) {
     queryKey: ["trip", id],
     queryFn: () => getTripById(id),
     enabled: !!id,
+  });
+}
+
+export function useGetDeleteTripById() {
+  const queryClient = useQueryClient();
+
+  return useMutation({
+    mutationFn: (id: string) => getDeleteTripById(id),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["trips", "delete"] });
+    },
   });
 }
 
