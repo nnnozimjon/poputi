@@ -103,7 +103,7 @@ export const AppHeader = () => {
               size="90%"
               title="Poputi TJ"
               classNames={{
-                title: "text-[#054652] text-[24px] font-bold"
+                title: "text-blue-600 text-[24px] font-bold"
               }}
             >
               <Stack>
@@ -112,7 +112,7 @@ export const AppHeader = () => {
                     <Button
                       fullWidth
                       variant="transparent"
-                      className="text-[#054652] text-[16px] p-0"
+                      className="text-blue-600 text-[16px] p-0"
                       justify="space-between"
                       rightSection={<FaAngleRight />}
                       onClick={() => {
@@ -125,7 +125,7 @@ export const AppHeader = () => {
                     <Button
                       fullWidth
                       variant="transparent"
-                      className="text-[#054652] text-[16px] p-0"
+                      className="text-blue-600 text-[16px] p-0"
                       justify="space-between"
                       rightSection={<FaAngleRight />}
                       onClick={() => {
@@ -144,7 +144,7 @@ export const AppHeader = () => {
                       justify="space-between"
                       rightSection={<FaAngleRight />}
                       variant="transparent"
-                      className="text-[#054652] text-[16px] p-0"
+                      className="text-blue-600 text-[16px] p-0"
                       onClick={() => {
                         redirect("/my-trips");
                         setOpened(false);
@@ -157,7 +157,7 @@ export const AppHeader = () => {
                       justify="space-between"
                       rightSection={<FaAngleRight />}
                       variant="transparent"
-                      className="text-[#054652] text-[16px] p-0"
+                      className="text-blue-600 text-[16px] p-0"
                       onClick={() => {
                         redirect("/profile");
                         setOpened(false);
@@ -180,13 +180,13 @@ export const AppHeader = () => {
                   </>
                 )}
                 <Divider />
-                <p className="text-[22px] text-[#054652] font-bold">
+                <p className="text-[22px] text-blue-600 font-bold">
                   Путешествие по...
                 </p>
                 <Button
                   fullWidth
                   variant="transparent"
-                  className="text-[#054652] text-[16px] p-0"
+                  className="text-blue-600 text-[16px] p-0"
                   justify="space-between"
                   rightSection={<FaAngleRight />}
                   onClick={() => {
@@ -199,7 +199,7 @@ export const AppHeader = () => {
                 <Button
                   fullWidth
                   variant="transparent"
-                  className="text-[#054652] text-[16px] p-0"
+                  className="text-blue-600 text-[16px] p-0"
                   justify="space-between"
                   rightSection={<FaAngleRight />}
                   onClick={() => {

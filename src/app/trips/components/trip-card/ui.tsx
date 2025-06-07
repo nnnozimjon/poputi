@@ -23,7 +23,7 @@ export const TripCard = () => {
   const driverAvatar = ""; // Add avatar URL if available
 
   return (
-    <div className="w-full border rounded-2xl border-solid border-gray-light hover:border-blue hover:border-2 bg-white flex flex-col gap-4 p-4 md:p-6">
+    <div className="w-full border rounded-2xl border-solid border-gray-light hover:border-blue hover:border-2 bg-white flex flex-col gap-4 md:px-6 md:py-[12px]">
       {/* Top: Time, Route, Price */}
       <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
         {/* Time and Route */}
@@ -50,13 +50,12 @@ export const TripCard = () => {
           </div>
         </div>
         {/* Price */}
-        <div className="flex flex-col items-end min-w-[90px]">
+        <div className="flex flex-col items-end min-w-[90px] hidden md:flex">
           <span className="text-xs text-gray">from</span>
           <span className="font-bold text-2xl text-main">{price}</span>
         </div>
       </div>
       {/* Divider */}
-      <div className="border-t border-gray-light my-2" />
       {/* Details: Vehicle, Operator, Seats, Amenities, Driver */}
       <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-3">
         {/* Vehicle & Operator */}
@@ -72,7 +71,7 @@ export const TripCard = () => {
           <span className="font-semibold text-dark-blue">{seatsLeft}</span>
         </div>
         {/* Amenities */}
-        <div className="flex items-center gap-2">
+        {/* <div className="flex items-center gap-2">
           {amenities.map((amenity, idx) => (
             <span
               key={amenity}
@@ -81,9 +80,9 @@ export const TripCard = () => {
               {amenity}
             </span>
           ))}
-        </div>
+        </div> */}
         {/* Driver */}
-        <div className="flex items-center gap-2">
+        <div className="flex items-center gap-2 justify-between md:justify-end">
           <Image
             width={28}
             height={28}
@@ -91,6 +90,10 @@ export const TripCard = () => {
             className="rounded-full object-cover size-7"
             alt={driverName}
           />
+          <div className="flex md:hidden flex-col items-end min-w-[90px]">
+            <span className="text-xs text-gray">from</span>
+            <span className="font-bold text-2xl text-main">{price}</span>
+          </div>
         </div>
       </div>
     </div>

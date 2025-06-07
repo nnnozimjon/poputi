@@ -26,9 +26,9 @@ export default function HomePage() {
           className="w-full h-[272px] object-cover object-center"
         />
         <div className="absolute w-full flex items-center justify-center -bottom-5">
-          <div className="w-full md:w-auto px-4 md:p-0">
-          <SearchTrips /> 
-          </div>
+          <Container size={"xl"} className="w-full">
+            <SearchTrips /> 
+          </Container>
         </div>
       </div>
       <MainPageTopContent />

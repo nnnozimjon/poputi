@@ -18,6 +18,7 @@ const config: Config = {
       "dark-blue": "#2D6187",
       green: "#13ce66",
       blue: "#1fb6ff",
+      "blue-600": "#054652",
       pink: "#ff49db",
       orange: "#ff7849",
       "gray-dark": "#273444",

@@ -46,13 +46,13 @@ export const SearchTrips = () => {
       whileInView={"onscreen"}
       viewport={{ once: true, amount: 0.8 }}
       variants={scrollAnimation}
-      className="w-full bg-white rounded-lg shadow-lg"
+      className="w-full bg-white rounded-xl shadow-lg"
       id="search-trips2"
     >
       <div className="grid grid-cols-12 md:flex gap-4 md:items-center">
         <Select
           placeholder="Откуда"
-          className="w-full col-span-12"
+          className="w-full col-span-12 ml-2"
           classNames={{
             input: "border-none",
             section: "text-xl text-main",
@@ -99,7 +99,7 @@ export const SearchTrips = () => {
           onChange={(value) => setPassengers(value)}
         />
         <Button
-          className="w-full bg-main hover:bg-blue-dark z-10 col-span-12 h-[56px]"
+          className="w-full bg-main hover:bg-blue-dark z-10 col-span-12 h-[56px] rounded-xl"
           leftSection={<IoSearch />}
           onClick={handleSearch}
         >

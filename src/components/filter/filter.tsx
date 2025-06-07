@@ -66,7 +66,7 @@ export const Filter = () => {
       <div>
         <div
           className="flex justify-between items-center">
-          <p className="font-bold text-[#054652] text-2xl">Sort by</p>
+          <p className="font-bold text-blue-600 text-2xl">Sort by</p>
           <Button variant="transparent" className="text-[#b0b0b0] text-[16px] p-0 m-0" size="xs" onClick={clearAll}>
             Clear All
           </Button>
@@ -88,7 +88,7 @@ export const Filter = () => {
                 onChange={() => setSelectedSort(i)}
                 className="mr-2"
               />
-              <span className="text-[#054652] flex-1 text-lg font-medium">{opt.label}</span>
+              <span className="text-blue-600 flex-1 text-lg font-medium">{opt.label}</span>
               <span className="text-[#b0b0b0] text-2xl">{opt.icon}</span>
             </label>
           ))}
@@ -101,7 +101,7 @@ export const Filter = () => {
 
       {/* Pick-up time */}
       <div>
-        <p className="font-bold text-[#054652] text-2xl">Pick-up time</p>
+        <p className="font-bold text-blue-600 text-2xl">Pick-up time</p>
         <div className="mt-4">
           {pickupTimes.map((opt: Option, i: number) => (
             <label
@@ -120,7 +120,7 @@ export const Filter = () => {
                 }
                 className="mr-2"
               />
-              <span style={{ flex: 1 }} className="text-[#054652] text-lg font-medium">{opt.label}</span>
+              <span style={{ flex: 1 }} className="text-blue-600 text-lg font-medium">{opt.label}</span>
               <span className="text-[#b0b0b0] text-lg">
                 {opt.count}
               </span>
@@ -135,7 +135,7 @@ export const Filter = () => {
 
       {/* Trust and safety */}
       <div>
-        <p className="font-bold text-[#054652] text-2xl">Trust and safety</p>
+        <p className="font-bold text-blue-600 text-2xl">Trust and safety</p>
         <div className="mt-4">
           {trustSafety.map((opt: Option, i: number) => (
             <label
@@ -153,8 +153,8 @@ export const Filter = () => {
                   toggleSelection(i, selectedTrust, setSelectedTrust)
                 }
                 className="mr-2"
-              />  
-              <span className="flex-1 text-[#054652] text-lg font-medium">{opt.label}</span>
+              />
+              <span className="flex-1 text-blue-600 text-lg font-medium">{opt.label}</span>
               <span className="text-[#b0b0b0] text-lg">{opt.count}</span>
               <span className="text-[#1ecbff] text-2xl">{opt.icon}</span>
             </label>
@@ -168,7 +168,7 @@ export const Filter = () => {
 
       {/* Amenities */}
       <div>
-        <p className="font-bold text-[#054652] text-2xl">Amenities</p>
+        <p className="font-bold text-blue-600 text-2xl">Amenities</p>
         <div className="mt-4">
           {amenities.map((opt: Option, i: number) => (
             <label
@@ -188,7 +188,7 @@ export const Filter = () => {
                 }
                 className="mr-2"
               />
-              <span className="flex-1 text-[#054652] text-lg font-medium">{opt.label}</span>
+              <span className="flex-1 text-blue-600 text-lg font-medium">{opt.label}</span>
               <span className="text-[#b0b0b0] text-lg">{opt.count}</span>
               <span className="text-[#1ecbff] text-2xl">{opt.icon}</span>
             </label>
