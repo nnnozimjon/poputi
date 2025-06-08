@@ -10,7 +10,7 @@ export const TripCard = () => {
   const departureTime = "12:30";
   const arrivalTime = "19:45";
   const duration = "7h 15m";
-  const price = "£27.90";
+  const price = "27.90";
   const departureCity = "London";
   const departureStation = "Waterloo Rail Station";
   const arrivalCity = "Manchester";
@@ -52,7 +52,9 @@ export const TripCard = () => {
         {/* Price */}
         <div className="flex flex-col items-end min-w-[90px] hidden md:flex">
           <span className="text-xs text-gray">from</span>
-          <span className="font-bold text-2xl text-main">{price}</span>
+          <span className="font-bold text-2xl text-main">{price} 
+            <span className="">СМН</span>
+          </span>
         </div>
       </div>
       {/* Divider */}

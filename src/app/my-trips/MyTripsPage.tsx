@@ -14,19 +14,24 @@ export function MyTripsPage() {
     <Container size="xl" className="py-12">
       <div className="flex items-center justify-between mb-8">
         <h1 className="text-3xl font-bold">Мои поездки</h1>
-        <Button onClick={() => setIsOpenCreateTripModal(true)}>Создать</Button>
+        <Button className="bg-main hover:bg-blue-dark" onClick={() => setIsOpenCreateTripModal(true)}>Создать</Button>
       </div>
       <p className="text-gray-700 leading-relaxed mb-4">
         Здесь вы можете просмотреть и управлять своими поездками.
       </p>
 
-      {!isLoading && (data?.data?.length ?? 0) < 0 && (
-        <div className="w-full h-96 flex items-center justify-center flex-col gap-5">
+      {!isLoading && (!data?.data || data.data.length === 0) && (
+        <div className="w-full h-[500px] flex items-center justify-center flex-col gap-5">
           <IoCarSport className="text-main size-40" />
           <Text className="text-lg text-dark-blue text-center">
-            Попутчики не найдены. <br /> Пожалуйста, попробуйте выбрать другое
-            время.
+            У вас пока нет поездок. <br /> Создайте свою первую поездку прямо сейчас!
           </Text>
+          <Button
+            onClick={() => setIsOpenCreateTripModal(true)}
+            className="mt-4 bg-main hover:bg-blue-dark"
+          >
+            Создать поездку
+          </Button>
         </div>
       )}
 

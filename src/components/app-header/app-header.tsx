@@ -25,11 +25,14 @@ import { IoSearch } from "react-icons/io5";
 import { IoIosArrowDown, IoIosArrowUp } from "react-icons/io";
 import { useDisclosure } from "@mantine/hooks";
 import { LuCirclePlus } from "react-icons/lu";
+import { CreateTripModal } from "@/modals";
 
 export const AppHeader = () => {
   const dispatch = useDispatch();
   const user = useAppSelector((state) => state.user);
   const [opened, setOpened] = useState(false);
+
+  const [isOpenCreateTripModal, setIsOpenCreateTripModal] = useState(false);
 
   const [isOpenMenu, { toggle: toggleMenu }] = useDisclosure(false);
 
@@ -56,22 +59,22 @@ export const AppHeader = () => {
                 </svg>
               </Link>
               <Group visibleFrom="sm">
-              <Link
-                className="text-blue text-[16px] p-0 no-underline font-bold"
-                href={"/trips?type=bus"}
-              >
-                Автобус
-              </Link>
-              <Link
-                className="text-blue text-[16px] p-0 no-underline font-bold"
-                href={"/trips?type=car"}
-              >
-                Автомобиль
-              </Link>
-                </Group>
+                <Link
+                  className="text-main text-[16px] p-0 no-underline font-bold"
+                  href={"/trips?type=bus"}
+                >
+                  Автобус
+                </Link>
+                <Link
+                  className="text-main text-[16px] p-0 no-underline font-bold"
+                  href={"/trips?type=car"}
+                >
+                  Автомобиль
+                </Link>
+              </Group>
             </div>
 
-            {user?.isAuthenticated && (
+            {!user?.isAuthenticated && (
               <Group visibleFrom="sm" className="gap-0">
                 <Avatar size="lg" color="blue" className="border-transparent" />
                 <Menu position="bottom-end" shadow="md" width={400} opened={isOpenMenu} onOpen={toggleMenu} onClose={toggleMenu}>
@@ -118,20 +121,23 @@ export const AppHeader = () => {
               </Group>
             )}
 
-            {!user?.isAuthenticated && (
+            {user?.isAuthenticated && (
               <Group visibleFrom="sm" className="gap-0">
                 <div className="flex items-center gap-6">
                   <Button
                     fullWidth
                     variant="transparent"
                     justify="space-between"
-                    className="text-blue p-0"
+                    className="text-main p-0"
                     leftSection={<LuCirclePlus size={24} />}
+                    onClick={() => setIsOpenCreateTripModal(true)}
                   >
                     Создать поездку
                   </Button>
                   <div className="flex items-center">
-                    <Avatar size="lg" color="blue" className="border-transparent" />
+                    <Avatar size="lg" classNames={{
+                      placeholder: 'text-main'
+                    }} className="border-transparent" />
                     <Menu position="bottom-end" shadow="md" width={400} opened={isOpenMenu} onOpen={toggleMenu} onClose={toggleMenu}>
                       <Menu.Target>
                         <ActionIcon variant="transparent" color="blue.6" size="lg" onClick={() => toggleMenu()}>
@@ -310,6 +316,8 @@ export const AppHeader = () => {
           </Group>
         </header>
       </Container>
+
+      <CreateTripModal close={() => setIsOpenCreateTripModal(false)} opened={isOpenCreateTripModal} />
     </div>
   );
 };

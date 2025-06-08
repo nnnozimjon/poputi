@@ -40,7 +40,7 @@ export default function RootLayout({
             <MantineProvider>
               <QueryClientProvider client={queryClient}>
                 <AppHeader />
-                <div className="pt-16">{children}</div>
+                <div className="pt-14">{children}</div>
                 <AppFooter />
                 <ToastContainer
                   position="top-right"
