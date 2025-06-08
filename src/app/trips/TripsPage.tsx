@@ -43,11 +43,11 @@ export default function TripsPage() {
               <Tabs.Tab value="all" className={`text-[16px] p-6 font-semibold ${activeTab === "all" ? "border-b-2 border-solid border-blue-600" : ""}`} leftSection={<LuDot size={20} />}>
                 All
               </Tabs.Tab>
-              <Tabs.Tab value="bus" className={`text-[16px] p-6 font-semibold ${activeTab === "bus" ? "border-b-2 border-solid border-blue-600" : ""}`} leftSection={<IoBus size={20} />}>
-                Bus
-              </Tabs.Tab>
               <Tabs.Tab value="car" className={`text-[16px] p-6 font-semibold ${activeTab === "car" ? "border-b-2 border-solid border-blue-600" : ""}`} leftSection={<IoCarSport size={20} />}>
                 Car
+              </Tabs.Tab>
+              <Tabs.Tab value="bus" className={`text-[16px] p-6 font-semibold ${activeTab === "bus" ? "border-b-2 border-solid border-blue-600" : ""}`} leftSection={<IoBus size={20} />}>
+                Bus
               </Tabs.Tab>
             </Tabs.List>
           </Tabs>

@@ -23,7 +23,7 @@ export const TripCard = () => {
   const driverAvatar = ""; // Add avatar URL if available
 
   return (
-    <div className="w-full border rounded-2xl border-solid border-gray-light hover:border-blue hover:border-2 bg-white flex flex-col gap-4 md:px-6 md:py-[12px]">
+    <div className="w-full border rounded-2xl border-solid border-gray-light hover:border-blue hover:border-2 bg-white flex flex-col gap-4 md:px-6 md:py-[12px] p-4">
       {/* Top: Time, Route, Price */}
       <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
         {/* Time and Route */}

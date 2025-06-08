@@ -52,7 +52,7 @@ export const SearchTrips = () => {
       <div className="grid grid-cols-12 md:flex gap-4 md:items-center">
         <Select
           placeholder="Откуда"
-          className="w-full col-span-12 ml-2"
+          className="w-full col-span-12 ml-0 md:ml-2"
           classNames={{
             input: "border-none",
             section: "text-xl text-main",
