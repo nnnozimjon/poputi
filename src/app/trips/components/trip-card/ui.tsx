@@ -1,10 +1,10 @@
 "use client";
 
 import Image from "next/image";
-import { FaChevronRight } from "react-icons/fa6";
+import { FaCar, FaChevronRight } from "react-icons/fa6";
 import { IoLocationOutline, IoWalletOutline } from "react-icons/io5";
 import { FaBus } from "react-icons/fa6";
-import { calculateDuration, formatDateWithDayAndTime, formatTimeOnly } from "@/utils";
+import { calculateDuration, formatDateWithDayAndTime, formatTimeOnly, redirect } from "@/utils";
 import { Divider } from "@mantine/core";
 
 
@@ -31,7 +31,7 @@ interface TripCardProps {
   };
 }
 
-export const TripCard = ({ trip }: TripCardProps) => {  
+export const TripCard = ({ trip }: TripCardProps) => {
   const departureTime = formatTimeOnly(new Date(trip.departure_time));
   const arrivalTime = formatTimeOnly(new Date(trip.destination_time));
   const duration = calculateDuration(new Date(trip.departure_time), new Date(trip.destination_time));
@@ -47,7 +47,13 @@ export const TripCard = ({ trip }: TripCardProps) => {
   const driverAvatar = "";
 
   return (
-    <div className={`w-full border rounded-2xl border-solid border-gray-light bg-white flex flex-col gap-4 md:px-6 md:py-[12px] p-4 relative ${seatsLeft === 0 || new Date(trip.departure_time) < new Date() ? 'opacity-50' : 'hover:border-blue hover:border-2'}`}>
+    <div onClick={() => {
+      if (seatsLeft === 0 || new Date(trip.departure_time) < new Date()) {
+        return;
+      }
+
+      redirect(`/booking?id=${trip.id}`);
+    }} className={`w-full border rounded-2xl border-solid border-gray-light bg-white flex flex-col gap-4 md:px-6 md:py-[12px] p-4 relative ${seatsLeft === 0 || new Date(trip.departure_time) < new Date() ? 'opacity-50' : 'hover:border-blue hover:border-2 cursor-pointer'}`}>
       <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
         <div className="flex-1 flex flex-col gap-2">
           <div className="flex items-center gap-4">
@@ -88,7 +94,11 @@ export const TripCard = ({ trip }: TripCardProps) => {
 
       <div className="flex justify-between items-center gap-3 mt-2">
         <div className="flex items-center gap-2">
-          <FaBus className="text-main text-xl" />
+          {trip?.tripSeats?.length > 8 ? (
+            <FaBus className="text-main text-xl" />
+          ) : (
+            <FaCar className="text-main text-xl" />
+          )}
           <span className="text-sm text-dark-blue">{vehicleType}</span>
           <span className="text-xs text-gray">|</span>
           <span className="text-sm text-gray">{operator}</span>
