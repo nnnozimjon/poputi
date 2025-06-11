@@ -4,38 +4,60 @@ import Image from "next/image";
 import { FaChevronRight } from "react-icons/fa6";
 import { IoLocationOutline, IoWalletOutline } from "react-icons/io5";
 import { FaBus } from "react-icons/fa6";
+import { calculateDuration, formatDateWithDayAndTime, formatTimeOnly } from "@/utils";
+import { Divider } from "@mantine/core";
 
-export const TripCard = () => {
-  // Example data for demonstration
-  const departureTime = "12:30";
-  const arrivalTime = "19:45";
-  const duration = "7h 15m";
-  const price = "27.90";
-  const departureCity = "London";
-  const departureStation = "Waterloo Rail Station";
-  const arrivalCity = "Manchester";
-  const arrivalStation = "Airport Bus Station";
-  const vehicleType = "Bus";
-  const operator = "National Express";
-  const seatsLeft = 4;
-  const amenities = ["WiFi", "AC", "Luggage"];
-  const driverName = "Nozimjon Shamsulloev";
-  const driverAvatar = ""; // Add avatar URL if available
+
+interface TripCardProps {
+  trip: {
+    id: string;
+    departure_city: string;
+    destination_city: string;
+    departure_time: string;
+    destination_time: string;
+    created_at: string;
+    driver: {
+      user_fullname: string;
+      car_model: string;
+      car_brand: string;
+    };
+    tripSeats: Array<{
+      id: number;
+      trip_id: string;
+      seat_id: number;
+      price: string;
+      status: string;
+    }>;
+  };
+}
+
+export const TripCard = ({ trip }: TripCardProps) => {  
+  const departureTime = formatTimeOnly(new Date(trip.departure_time));
+  const arrivalTime = formatTimeOnly(new Date(trip.destination_time));
+  const duration = calculateDuration(new Date(trip.departure_time), new Date(trip.destination_time));
+  const price = Number(trip.tripSeats[1]?.price).toFixed(0);
+  const departureCity = trip.departure_city;
+  const departureStation = trip.departure_city;
+  const arrivalCity = trip.destination_city;
+  const arrivalStation = trip.destination_city;
+  const vehicleType = trip.driver.car_model;
+  const operator = trip.driver.car_brand;
+  const seatsLeft = trip.tripSeats.filter((seat) => seat.status === "available").length;
+  const driverName = trip.driver.user_fullname;
+  const driverAvatar = "";
 
   return (
-    <div className="w-full border rounded-2xl border-solid border-gray-light hover:border-blue hover:border-2 bg-white flex flex-col gap-4 md:px-6 md:py-[12px] p-4">
-      {/* Top: Time, Route, Price */}
+    <div className={`w-full border rounded-2xl border-solid border-gray-light bg-white flex flex-col gap-4 md:px-6 md:py-[12px] p-4 relative ${seatsLeft === 0 || new Date(trip.departure_time) < new Date() ? 'opacity-50' : 'hover:border-blue hover:border-2'}`}>
       <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
-        {/* Time and Route */}
         <div className="flex-1 flex flex-col gap-2">
           <div className="flex items-center gap-4">
-            <span className="font-semibold text-lg text-dark-blue">{departureTime}</span>
+            <span className="font-semibold text-sm md:text-lg text-dark-blue">{departureTime}</span>
             <span className="text-gray text-sm flex items-center gap-2">
               <span className="w-16 h-[2px] bg-gray-light inline-block" />
               <span>{duration}</span>
               <span className="w-16 h-[2px] bg-gray-light inline-block" />
             </span>
-            <span className="font-semibold text-lg text-dark-blue">{arrivalTime}</span>
+            <span className="font-semibold text-sm md:text-lg text-dark-blue">{arrivalTime}</span>
           </div>
           <div className="flex items-center gap-4">
             <div className="flex flex-col">
@@ -49,53 +71,41 @@ export const TripCard = () => {
             </div>
           </div>
         </div>
-        {/* Price */}
         <div className="flex flex-col items-end min-w-[90px] hidden md:flex">
-          <span className="text-xs text-gray">from</span>
-          <span className="font-bold text-2xl text-main">{price} 
-            <span className="">СМН</span>
-          </span>
+          {seatsLeft === 0 || new Date(trip.departure_time) < new Date() ? (
+            <span className="text-lg font-semibold text-blue-600">
+              {new Date(trip.departure_time) < new Date() ? 'Время вышло' : 'Мест нет'}</span>
+          ) : (
+            <>
+              <span className="text-xs text-gray">от</span>
+              <span className="font-bold text-2xl text-main">{price}
+                <span className="text-sm"> СМН</span>
+              </span>
+            </>
+          )}
         </div>
       </div>
-      {/* Divider */}
-      {/* Details: Vehicle, Operator, Seats, Amenities, Driver */}
-      <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-3">
-        {/* Vehicle & Operator */}
+
+      <div className="flex justify-between items-center gap-3 mt-2">
         <div className="flex items-center gap-2">
           <FaBus className="text-main text-xl" />
           <span className="text-sm text-dark-blue">{vehicleType}</span>
           <span className="text-xs text-gray">|</span>
           <span className="text-sm text-gray">{operator}</span>
         </div>
-        {/* Seats left */}
-        <div className="flex items-center gap-2">
-          <span className="text-xs text-gray">Seats left:</span>
-          <span className="font-semibold text-dark-blue">{seatsLeft}</span>
-        </div>
-        {/* Amenities */}
-        {/* <div className="flex items-center gap-2">
-          {amenities.map((amenity, idx) => (
-            <span
-              key={amenity}
-              className="bg-gray-light text-xs text-gray px-2 py-0.5 rounded"
-            >
-              {amenity}
-            </span>
-          ))}
-        </div> */}
-        {/* Driver */}
-        <div className="flex items-center gap-2 justify-between md:justify-end">
-          <Image
-            width={28}
-            height={28}
-            src={driverAvatar || "/default-avatar.png"}
-            className="rounded-full object-cover size-7"
-            alt={driverName}
-          />
-          <div className="flex md:hidden flex-col items-end min-w-[90px]">
-            <span className="text-xs text-gray">from</span>
-            <span className="font-bold text-2xl text-main">{price}</span>
-          </div>
+
+        <div className="flex items-center gap-2 justify-between md:justify-end md:hidden">
+          {seatsLeft === 0 || new Date(trip.departure_time) < new Date() ? (
+            <span className="text-lg font-semibold text-blue-600">
+              {new Date(trip.departure_time) < new Date() ? 'Время вышло' : 'Мест нет'}</span>
+          ) : (
+            <>
+              <span className="text-xs text-gray">от</span>
+              <span className="font-bold text-2xl text-main">{price}
+                <span className="text-sm"> СМН</span>
+              </span>
+            </>
+          )}
         </div>
       </div>
     </div>
