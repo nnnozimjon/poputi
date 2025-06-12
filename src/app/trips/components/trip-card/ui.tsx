@@ -43,15 +43,12 @@ export const TripCard = ({ trip }: TripCardProps) => {
   const vehicleType = trip.driver.car_model;
   const operator = trip.driver.car_brand;
   const seatsLeft = trip.tripSeats.filter((seat) => seat.status === "available").length;
-  const driverName = trip.driver.user_fullname;
-  const driverAvatar = "";
 
   return (
     <div onClick={() => {
       if (seatsLeft === 0 || new Date(trip.departure_time) < new Date()) {
         return;
       }
-
       redirect(`/booking?id=${trip.id}`);
     }} className={`w-full border rounded-2xl border-solid border-gray-light bg-white flex flex-col gap-4 md:px-6 md:py-[12px] p-4 relative ${seatsLeft === 0 || new Date(trip.departure_time) < new Date() ? 'opacity-50' : 'hover:border-blue hover:border-2 cursor-pointer'}`}>
       <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
