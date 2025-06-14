@@ -94,7 +94,7 @@ export const SearchTrips = () => {
             input: "border-none",
             section: "text-xl text-main",
           }}
-          data={["1", "2", "3", "4"]}
+          data={["1", "2", "3", "4", "5", "6", "7", "8"]}
           leftSection={<MdMyLocation />}
           onChange={(value) => setPassengers(value)}
         />

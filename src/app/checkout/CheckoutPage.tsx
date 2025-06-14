@@ -5,8 +5,28 @@ import { Button, Checkbox, Container, Input, Select } from "@mantine/core";
 import { Radio } from "@mantine/core";
 import { Text } from "@mantine/core";
 import Image from "next/image";
+import { useCreateOrder } from "@/hooks/useAlifPayment";
 
 export default function CheckoutPage() {
+    const { mutate: createOrder } = useCreateOrder();
+
+    const handleCreateOrder = () => {
+        createOrder(undefined, {
+            onSuccess: (data) => {
+                // Create a new window/tab with the HTML response
+                const newWindow = window.open('alifPayWindow', '_blank');
+                if (newWindow) {
+                    newWindow.document.write(data);
+                    newWindow.document.close();
+                }
+            },
+            onError: (error) => {
+                console.error('Error creating order:', error);
+            }
+        });
+    }
+   
+
     return <Container size="xl" className="mt-5 md:mt-10 px-0 md:px-10">
         <div className="px-4 md:px-6">
             <div className="grid grid-cols-12 gap-6 mt-5">
@@ -69,7 +89,7 @@ export default function CheckoutPage() {
                         <h2 className="text-lg font-bold mb-4">Способ оплаты</h2>
 
                         <div className="flex items-center gap-2">
-                            <div className="border border-gray-light border-solid rounded-md p-2 w-full flex items-center justify-center hover:border-main cursor-pointer">
+                            <div onClick={handleCreateOrder} className="border border-gray-light border-solid rounded-md p-2 w-full flex items-center justify-center hover:border-main cursor-pointer">
                                 <Image src={AlifLogo} width={100} height={100} alt="Alif" />
                             </div>
                             <div className="border border-gray-light border-solid rounded-md p-2 w-full flex items-center justify-center hover:border-main cursor-pointer">
