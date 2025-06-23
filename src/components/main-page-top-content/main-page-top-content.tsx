@@ -29,7 +29,7 @@ export const MainPageTopContent = () => {
       >
         {/* Left Content */}
         <div className="md:col-span-6 col-span-12 md:order-1 order-2 flex flex-col gap-6 sm:gap-10 items-center justify-center">
-          <Text className="text-center sm:text-left font-semibold text-3xl md:text-6xl text-dark-blue mt-0 md:mt-20">
+          <Text className="text-center sm:text-left font-semibold text-3xl md:text-6xl text-dark-blue mt-36 md:mt-20">
             Сервис для 
             <strong className="text-main">поиска попутчиков</strong>
              и автомобилей для поездок по 

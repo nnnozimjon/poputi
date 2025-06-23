@@ -1,10 +1,13 @@
 import ImageCropper from "@/components/image-cropper/image-cropper";
-import { Button, InputBase } from "@mantine/core";
+import { ActionIcon, Button, InputBase } from "@mantine/core";
 import { AvatarImage } from "@/assets";
 import Image from "next/image";
 import { formatPhoneNumber } from "@/utils";
+import { FaEye, FaEyeSlash } from "react-icons/fa6";
+import { useState } from "react";
 
 export const UserInfo = ({ userInfo, setUserInfo, withImage = true }: any) => {
+  const [showPassword, setShowPassword] = useState(false);
   return (
     <div className="w-full gap-4 flex flex-col items-center">
       {withImage && (
@@ -58,6 +61,29 @@ export const UserInfo = ({ userInfo, setUserInfo, withImage = true }: any) => {
             phoneNumber: formatPhoneNumber(e.target.value),
           }))
         }
+      />
+      <InputBase
+        label="Пароль"
+        placeholder={"Пароль"}
+        type={showPassword ? "text" : "password"}
+        className="w-full md:w-[400px]"
+        classNames={{
+          input: "h-[50px] rounded-lg",
+          section: "p-2",
+          label: "text-gray-dark",
+        }}
+        value={userInfo?.password}
+        onChange={(e) =>
+          setUserInfo((prev: any) => ({
+            ...prev,
+            password: e.target.value,
+          }))
+        }
+        rightSection={
+          <ActionIcon variant="transparent" onClick={() => setShowPassword(!showPassword)}>
+            {showPassword ? <FaEye /> : <FaEyeSlash />}
+          </ActionIcon>
+        } 
       />
       <InputBase
         label="Адрес"

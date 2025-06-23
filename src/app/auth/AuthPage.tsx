@@ -1,7 +1,7 @@
 "use client";
 
 import { Logo } from "@/components/logo/logo";
-import { Button, Flex, InputBase, PinInput, Text } from "@mantine/core";
+import { ActionIcon, Button, Flex, InputBase, PinInput, Text } from "@mantine/core";
 import Link from "next/link";
 import { useEffect, useState } from "react";
 import { setCookie } from "cookies-next";
@@ -10,14 +10,16 @@ import { decryptToken, formatPhoneNumber } from "@/utils";
 import { useDispatch } from "react-redux";
 import { loginSuccess } from "@/store/slices";
 import { toast } from "react-toastify";
+import { FaEye, FaEyeSlash } from "react-icons/fa6";
 
 export default function AuthPage() {
   const [view, setView] = useState<"auth" | "otp">("auth");
   const [loginForm, setLoginForm] = useState({
     phone_number: "",
+    password: "",
     otp_code: "",
   });
-
+  const [showPassword, setShowPassword] = useState(false);
   const [countdown, setCountdown] = useState(120);
   const [isResendEnabled, setIsResendEnabled] = useState(false);
 
@@ -36,7 +38,6 @@ export default function AuthPage() {
 
   const handleResend = () => {
     if (!isResendEnabled) return;
-    handleSendOtp();
     setCountdown(120);
     setIsResendEnabled(false);
   };
@@ -44,36 +45,19 @@ export default function AuthPage() {
   const dispatch = useDispatch();
   const [loading, setLoading] = useState(false);
 
-  const sendOtpMutation = useSendOtp();
   const { mutate: loginUser } = useUserLogin();
 
-  const handleSendOtp = () => {
-    setLoading(true);
-    sendOtpMutation.mutate(
-      { phone_number: loginForm.phone_number, type: "login" },
-      {
-        onSuccess: () => {
-          setLoading(false);
-          setView("otp");
-        },
-        onError: (error) => {
-          setLoading(false);
-          toast.warning((error as any).response.data?.message);
-        },
-      }
-    );
-  };
-
-  const handleVerifyOtp = () => {
+  const handleLogin = () => {
     setLoading(true);
     loginUser(
       {
         phone_number: loginForm.phone_number,
-        otp_code: loginForm.otp_code,
+        password: loginForm.password,
       },
       {
         onSuccess: (data) => {
           setLoading(false);
+          toast.success("Вы успешно вошли в систему");
           setCookie("access_token", data?.token, {
             maxAge: 60 * 60 * 24 * 365,
           });
@@ -126,8 +110,29 @@ export default function AuthPage() {
                   })
                 }
               />
+              <InputBase
+                type={showPassword ? "text" : "password"}
+                placeholder={"Пароль"}
+                className="w-full md:w-[400px]"
+                classNames={{
+                  input: "h-[50px] rounded-[16px]",
+                  section: "p-2",
+                }}
+                value={loginForm.password}
+                onChange={(e) =>
+                  setLoginForm({
+                    ...loginForm,
+                    password: e.target.value,
+                  })
+                }
+                rightSection={
+                  <ActionIcon variant="transparent" onClick={() => setShowPassword(!showPassword)}>
+                    {showPassword ? <FaEye /> : <FaEyeSlash />}
+                  </ActionIcon>
+                }
+              />
               <Button
-                onClick={handleSendOtp}
+                onClick={handleLogin}
                 variant="filled"
                 className="bg-dark-blue hover:bg-dark-blue w-full md:w-[400px]"
                 loading={loading}
@@ -136,40 +141,6 @@ export default function AuthPage() {
               </Button>
             </div>
           )}
-          {view === "otp" && (
-            <div className="w-full flex flex-col items-center gap-4 mt-4">
-              <Text className="text-secondary-200 my-0 py-0">
-                Мы отправили вам смс-код для подтверждения
-              </Text>
-
-              <Button
-                variant="transparent"
-                className="my-0"
-                onClick={handleResend}
-                disabled={!isResendEnabled}
-              >
-                {isResendEnabled
-                  ? "Отправить еще раз"
-                  : `Отправить еще раз (${countdown}s)`}
-              </Button>
-
-              <PinInput
-                size="lg"
-                length={6}
-                onChange={(value) =>
-                  setLoginForm({ ...loginForm, otp_code: value })
-                }
-              />
-              <Button
-                onClick={handleVerifyOtp}
-                variant="filled"
-                className="bg-dark-blue hover:bg-dark-blue w-full md:w-[400px]"
-              >
-                Войти
-              </Button>
-            </div>
-          )}
-
           <div className="flex gap-2">
             <p className="text-center select-none">Нет аккаунта? </p>
             <Link

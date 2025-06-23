@@ -3,9 +3,8 @@
 import { Container, Flex, Group, Paper, Text } from "@mantine/core";
 import { Logo } from "../logo/logo";
 import Link from "next/link";
-import { CgHome } from "react-icons/cg";
 import { FaHome, FaPlusCircle, FaSearch } from "react-icons/fa";
-import { FaCommentDots, FaHeart, FaUser } from "react-icons/fa6";
+import { FaCommentDots, FaUser } from "react-icons/fa6";
 import { useAppSelector } from "@/store/store";
 
 const data = [

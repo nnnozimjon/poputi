@@ -3,7 +3,7 @@ import apiClient from "./apiClient";
 
 interface loginUserBody {
     phone_number: string;
-    otp_code: string;
+    password: string;
 }
 
 const loginUserBody = async (body: loginUserBody) => {

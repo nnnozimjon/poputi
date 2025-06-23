@@ -2,7 +2,7 @@
 import { ActionIcon, Button, Flex, InputBase } from "@mantine/core";
 import { Otp } from "../components";
 import { useCallback, useState } from "react";
-import { FaArrowLeft } from "react-icons/fa6";
+import { FaArrowLeft, FaEye, FaEyeSlash } from "react-icons/fa6";
 import { toast } from "react-toastify";
 import { formatPhoneNumber } from "@/utils";
 import { useCheckUser, usePassengerRegisterQuery, useSendOtp } from "@/hooks";
@@ -20,14 +20,15 @@ export default function PassengerRegisterForm() {
   const [userInfo, setUserInfo] = useState({
     username: "",
     phone_number: "",
+    password: "",
   });
-
+  const [showPassword, setShowPassword] = useState(false);
   const validateStep = () => {
     const data = currentStep;
 
     switch (data) {
       case "userInfo":
-        return userInfo.phone_number && userInfo.username;
+        return userInfo.phone_number && userInfo.username && userInfo.password;
       case "otp":
         return otpCode.length === 6;
       default:
@@ -40,6 +41,12 @@ export default function PassengerRegisterForm() {
       toast.info("Пожалуйста, заполните все обязательные поля.");
       return;
     }
+
+    if (userInfo.phone_number.replace(/\s/g, "").length !== 13) {
+      toast.warning("Неверный номер телефона");
+      return;
+    }
+
     const isLastStep = stepIndex === steps.length - 1;
     if (currentStep === "userInfo") {
       checkUser(userInfo.phone_number, {
@@ -50,7 +57,7 @@ export default function PassengerRegisterForm() {
         onError: (error) => {
           toast.warning(
             (error as any).response?.data?.message ||
-              "Ошибка при проверке пользователя"
+            "Ошибка при проверке пользователя"
           );
         },
       });
@@ -123,6 +130,29 @@ export default function PassengerRegisterForm() {
                 ...prev,
                 phone_number: formatPhoneNumber(e.target.value),
               }))
+            }
+          />
+          <InputBase
+            label="Пароль"
+            placeholder={"Пароль"}
+            className="w-full md:w-[400px]"
+            type={showPassword ? "text" : "password"}
+            classNames={{
+              input: "h-[50px] rounded-lg",
+              section: "p-2",
+              label: "text-gray-dark",
+            }}
+            value={userInfo?.password}
+            onChange={(e) =>
+              setUserInfo((prev: any) => ({
+                ...prev,
+                password: e.target.value,
+              }))
+            }
+            rightSection={
+              <ActionIcon variant="transparent" onClick={() => setShowPassword(!showPassword)}>
+                {showPassword ? <FaEye /> : <FaEyeSlash />}
+              </ActionIcon>
             }
           />
         </div>

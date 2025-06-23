@@ -20,14 +20,18 @@ export default function HomePage() {
   return (
     <div>
       <div className="relative">
+        <div className="absolute top-0 left-0 w-full h-full text-center mt-5 md:mt-10">
+          <h1 className="text-2xl md:text-5xl text-white font-bold">Поездки на ваш выбор по самым низким ценам</h1>
+        </div>
         <img
           src={SkyImage.src}
           alt=""
-          className="w-full h-[272px] object-cover object-center"
+          className="w-full h-[272px] object-cover object-center hidden md:block"
         />
-        <div className="absolute w-full flex items-center justify-center -bottom-5">
+        <div className="w-full h-[235px] object-cover object-center md:hidden block bg-main" />
+        <div className="absolute w-full flex items-center justify-center -bottom-36 md:-bottom-5">
           <Container size={"xl"} className="w-full">
-            <SearchTrips /> 
+            <SearchTrips />
           </Container>
         </div>
       </div>

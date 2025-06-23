@@ -22,7 +22,7 @@ export default function DriverRegisterForm() {
     switch (data) {
       case "userInfo":
         return (
-          userInfo.phoneNumber && userInfo.username && userInfo.streetAddress
+          userInfo.phoneNumber && userInfo.username && userInfo.streetAddress && userInfo.password
         );
       case "carDetails":
         return (
@@ -43,6 +43,7 @@ export default function DriverRegisterForm() {
   const [userInfo, setUserInfo] = useState({
     username: "",
     phoneNumber: "",
+    password: "",
     streetAddress: "",
     croppedImage: null,
   });
@@ -71,6 +72,11 @@ export default function DriverRegisterForm() {
   const handleNext = () => {
     if (!validateStep()) {
       toast.info("Пожалуйста, заполните все обязательные поля.");
+      return;
+    }
+
+    if (userInfo.phoneNumber.replace(/\s/g, "").length !== 13) {
+      toast.warning("Неверный номер телефона");
       return;
     }
 
@@ -121,7 +127,7 @@ export default function DriverRegisterForm() {
     createUserForm.append("username", userInfo.username);
     createUserForm.append("phone_number", userInfo.phoneNumber);
     createUserForm.append("street_address", userInfo.streetAddress);
-
+    createUserForm.append("password", userInfo.password);
     if (userInfo.croppedImage) {
       createUserForm.append("avatar_image", userInfo.croppedImage as Blob);
     }
