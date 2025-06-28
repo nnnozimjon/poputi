@@ -19,15 +19,17 @@ import { CgLogOut, CgProfile } from "react-icons/cg";
 import { useDispatch } from "react-redux";
 import { logout } from "@/store/slices";
 import Link from "next/link";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { FaAngleRight } from "react-icons/fa6";
-import { IoSearch } from "react-icons/io5";
 import { IoIosArrowDown, IoIosArrowUp } from "react-icons/io";
 import { useDisclosure } from "@mantine/hooks";
 import { LuCirclePlus } from "react-icons/lu";
 import { CreateTripModal } from "@/modals";
+import { useGeoLocation } from "@/hooks/useGeoLocation";
 
 export const AppHeader = () => {
+  const { city, loading: loadingCity } = useGeoLocation()
+
   const dispatch = useDispatch();
   const user = useAppSelector((state) => state.user);
   const isDriver = user?.isDriver;

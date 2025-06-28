@@ -14,9 +14,18 @@ import { toast } from "react-toastify";
 import { useAppSelector } from "@/store/store";
 import { redirect } from "@/utils";
 import { IoCarSport } from "react-icons/io5";
+import { AlifLogo, DcLogo } from "@/assets";
+import { useCreateOrder } from "@/hooks/useAlifPayment";
+import { useCreateDcOrder } from "@/hooks/useDcPayment";
+import Image from "next/image";
+
 
 export default function BookingPage() {
   const user = useAppSelector((state) => state.user);
+  const { mutate: createOrder } = useCreateOrder();
+  const { mutate: createDcOrder } = useCreateDcOrder();
+
+
 
   const searchParams = useSearchParams();
   const tripId = searchParams.get('id');
@@ -46,12 +55,45 @@ export default function BookingPage() {
     return seatsTotal + tjsFee;
   };
 
+  const handleCreateOrder = () => {
+    createOrder(undefined, {
+      onSuccess: (data) => {
+        const newWindow = window.open('alifPayWindow', '_blank');
+        if (newWindow) {
+          newWindow.document.write(data);
+          newWindow.document.close();
+        }
+      },
+      onError: (error) => {
+        console.error('Error creating order:', error);
+      }
+    });
+  }
+
+  const handleCreateDcOrder = () => {
+    createDcOrder(undefined, {
+      onSuccess: (html: string) => {
+        const newWindow = window.open('', '_blank');
+        if (newWindow) {
+          newWindow.document.open(); // optional but safe
+          newWindow.document.write(html);
+          newWindow.document.close();
+        } else {
+          console.error('Unable to open new window. Popup blocked?');
+        }
+      },
+      onError: (error: unknown) => {
+        console.error('Failed to create DC order:', error);
+        alert('Не удалось создать платеж. Попробуйте еще раз.');
+      },
+    });
+  };
+
   const handleBooking = () => {
     // if (!user.isAuthenticated) {
     //   return redirect('/auth')
     // }
 
-    redirect('/checkout')
     // bookSeats({
     //   trip_id: tripId as string,
     //   seat_ids: selectedSeats,
@@ -172,6 +214,18 @@ export default function BookingPage() {
               </div>
             </div>
             <br />
+            <div className="shadow-[0_0_3px_rgba(0,0,0,0.1)] rounded-lg p-4">
+              <h2 className="text-lg font-bold mb-4">Способ оплаты</h2>
+
+              <div className="flex items-center gap-2">
+                <div onClick={handleCreateOrder} className="border border-gray-light border-solid rounded-md p-2 w-full flex items-center justify-center hover:border-main cursor-pointer">
+                  <Image src={AlifLogo} width={100} height={100} alt="Alif" />
+                </div>
+                <div onClick={handleCreateDcOrder} className="border border-gray-light border-solid rounded-md p-2 w-full flex items-center justify-center hover:border-main cursor-pointer">
+                  <Image src={DcLogo} width={100} height={100} alt="DC" />
+                </div>
+              </div>
+            </div>
           </div>
           <div className="col-span-12 md:col-span-4 h-fit">
             <div className="bg-white rounded-lg p-4 shadow-[0_0_3px_rgba(0,0,0,0.1)]">
