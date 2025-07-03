@@ -1,6 +1,6 @@
 "use client";
 
-import { Button, Checkbox, Container, Flex, Stepper, Text } from "@mantine/core";
+import { Alert, Button, Checkbox, Container, Input, InputBase, Stepper, Text } from "@mantine/core";
 import { useSearchParams } from "next/navigation";
 import { FaLocationDot } from "react-icons/fa6";
 import { PiSeatbeltFill } from "react-icons/pi";
@@ -8,31 +8,26 @@ import { Fragment } from "react";
 import { RxAvatar } from "react-icons/rx";
 import Link from "next/link";
 import { useState } from "react";
-import { useCreateBooking, useGetTripById } from "@/hooks";
+import { useCreateOrder, useGetTripById } from "@/hooks";
 import { GiCarKey } from "react-icons/gi";
-import { toast } from "react-toastify";
-import { useAppSelector } from "@/store/store";
-import { redirect } from "@/utils";
 import { IoCarSport } from "react-icons/io5";
 import { AlifLogo, DcLogo } from "@/assets";
-import { useCreateOrder } from "@/hooks/useAlifPayment";
-import { useCreateDcOrder } from "@/hooks/useDcPayment";
 import Image from "next/image";
+import { formatPhoneNumber } from "@/utils";
+import AlifPayForm from "./AlifPayForm";
 
 
 export default function BookingPage() {
-  const user = useAppSelector((state) => state.user);
-  const { mutate: createOrder } = useCreateOrder();
-  const { mutate: createDcOrder } = useCreateDcOrder();
-
-
-
+  const [selectedGate, setSelectedGate] = useState<'alif' | 'dc' | null>(null);
   const searchParams = useSearchParams();
   const tripId = searchParams.get('id');
 
   const { data: trip, refetch } = useGetTripById(tripId as string);
-  const { mutate: bookSeats, isPending } = useCreateBooking();
+  const { mutate: createOrder, isPending } = useCreateOrder();
   const [selectedSeats, setSelectedSeats] = useState<number[]>([]);
+  const [phoneNumber, setPhoneNumber] = useState('');
+  const [alifFormData, setAlifFormData] = useState(null);
+
 
   const handleSeatClick = (seatId: number, isBooked: boolean) => {
     if (isBooked) return;
@@ -55,58 +50,26 @@ export default function BookingPage() {
     return seatsTotal + tjsFee;
   };
 
-  const handleCreateOrder = () => {
-    createOrder(undefined, {
-      onSuccess: (data) => {
-        const newWindow = window.open('alifPayWindow', '_blank');
-        if (newWindow) {
-          newWindow.document.write(data);
-          newWindow.document.close();
-        }
-      },
-      onError: (error) => {
-        console.error('Error creating order:', error);
-      }
-    });
-  }
-
-  const handleCreateDcOrder = () => {
-    createDcOrder(undefined, {
-      onSuccess: (html: string) => {
-        const newWindow = window.open('', '_blank');
-        if (newWindow) {
-          newWindow.document.open(); // optional but safe
-          newWindow.document.write(html);
-          newWindow.document.close();
-        } else {
-          console.error('Unable to open new window. Popup blocked?');
-        }
-      },
-      onError: (error: unknown) => {
-        console.error('Failed to create DC order:', error);
-        alert('Не удалось создать платеж. Попробуйте еще раз.');
-      },
-    });
-  };
 
   const handleBooking = () => {
-    // if (!user.isAuthenticated) {
-    //   return redirect('/auth')
-    // }
+    createOrder({
+      trip_id: tripId as string,
+      seat_ids: selectedSeats,
+      user_phone: phoneNumber,
+      gate: selectedGate as string
+    }, {
+      onSuccess: (data) => {
+        if (selectedGate === 'dc') {
+          window.open(data.redirect_url, '_blank');
+          return;
+        }
 
-    // bookSeats({
-    //   trip_id: tripId as string,
-    //   seat_ids: selectedSeats,
-    // }, {
-    //   onSuccess: () => {
-    //     toast.success('Места успешно забронированы');
-    //     refetch();
-    //     setSelectedSeats([]);
-    //   },
-    //   onError: () => {
-    //     toast.error('Не удалось забронировать места');
-    //   }
-    // });
+        if (selectedGate === 'alif') {
+          console.log(data.data);
+          setAlifFormData(data.data);
+        }
+      },
+    });
   };
 
   if (!tripId) {
@@ -218,16 +181,38 @@ export default function BookingPage() {
               <h2 className="text-lg font-bold mb-4">Способ оплаты</h2>
 
               <div className="flex items-center gap-2">
-                <div onClick={handleCreateOrder} className="border border-gray-light border-solid rounded-md p-2 w-full flex items-center justify-center hover:border-main cursor-pointer">
+                <div onClick={() => setSelectedGate('alif')} className={`border border-gray-light border-solid rounded-md p-2 w-full flex items-center justify-center hover:border-main cursor-pointer ${selectedGate === 'alif' ? 'border-main border-2' : ''}`}>
                   <Image src={AlifLogo} width={100} height={100} alt="Alif" />
                 </div>
-                <div onClick={handleCreateDcOrder} className="border border-gray-light border-solid rounded-md p-2 w-full flex items-center justify-center hover:border-main cursor-pointer">
+                <div onClick={() => setSelectedGate('dc')} className={`border border-gray-light border-solid rounded-md p-2 w-full flex items-center justify-center hover:border-main cursor-pointer ${selectedGate === 'dc' ? 'border-main border-2' : ''}`}>
                   <Image src={DcLogo} width={100} height={100} alt="DC" />
                 </div>
               </div>
             </div>
+            <br />
+            <div className="shadow-[0_0_3px_rgba(0,0,0,0.1)] rounded-lg p-4">
+              <h2 className="text-lg font-bold mb-4">Номер телефона</h2>
+              <InputBase
+                placeholder={"Номер телефона"}
+                className="w-full"
+                classNames={{
+                  input: "h-[50px] rounded-[16px]",
+                  section: "p-2",
+                }}
+                value={phoneNumber}
+                onChange={(e) =>
+                  setPhoneNumber(formatPhoneNumber(e.target.value))
+                }
+              />
+              <Alert color="blue" className="mt-4">
+                <Text>
+                  Мы отправим вам билет на ваш номер телефона.
+                </Text>
+              </Alert>
+            </div>
+            <AlifPayForm data={alifFormData} />
           </div>
-          <div className="col-span-12 md:col-span-4 h-fit">
+          <div className="col-span-12 md:col-span-4 h-fit sticky top-20">
             <div className="bg-white rounded-lg p-4 shadow-[0_0_3px_rgba(0,0,0,0.1)]">
               <p className="text-lg text-blue-600">{trip?.departure_time ? new Date(trip.departure_time).toLocaleDateString('ru-RU', {
                 day: 'numeric',

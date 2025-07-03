@@ -42,7 +42,7 @@ export const Otp = ({ setOtpCode, resend }: any) => {
           : `Отправить еще раз (${countdown}s)`}
       </Button>
 
-      <PinInput size="lg" length={6} onChange={(value) => setOtpCode(value)} />
+      <PinInput type="number" size="lg" length={6} onChange={(value) => setOtpCode(value)} />
     </div>
   );
 };
