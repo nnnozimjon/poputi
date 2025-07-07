@@ -15,6 +15,7 @@ import { AlifLogo, DcLogo } from "@/assets";
 import Image from "next/image";
 import { formatPhoneNumber } from "@/utils";
 import AlifPayForm from "./AlifPayForm";
+import { toast } from "react-toastify";
 
 
 export default function BookingPage() {
@@ -27,7 +28,7 @@ export default function BookingPage() {
   const [selectedSeats, setSelectedSeats] = useState<number[]>([]);
   const [phoneNumber, setPhoneNumber] = useState('');
   const [alifFormData, setAlifFormData] = useState(null);
-
+  const [isChecked, setIsChecked] = useState(false);
 
   const handleSeatClick = (seatId: number, isBooked: boolean) => {
     if (isBooked) return;
@@ -52,6 +53,22 @@ export default function BookingPage() {
 
 
   const handleBooking = () => {
+    if (selectedSeats.length === 0) {
+      return toast.info('Пожалуйста, выберите место для бронирования');
+    }
+
+    if (selectedGate === null) {
+      return toast.info('Пожалуйста, выберите способ оплаты');
+    }
+
+    if (phoneNumber.replace(/\s/g, "").length !== 13) {
+      return toast.info('Пожалуйста, введите корректный номер телефона');
+    }
+
+    if (!isChecked) {
+      return toast.info('Пожалуйста, согласитесь с условиями использования');
+    }
+
     createOrder({
       trip_id: tripId as string,
       seat_ids: selectedSeats,
@@ -65,7 +82,6 @@ export default function BookingPage() {
         }
 
         if (selectedGate === 'alif') {
-          console.log(data.data);
           setAlifFormData(data.data);
         }
       },
@@ -233,6 +249,8 @@ export default function BookingPage() {
               </div>
               <div className="mt-4">
                 <Checkbox
+                  checked={isChecked}
+                  onChange={() => setIsChecked(!isChecked)}
                   label={
                     <Text size="sm">
                       Я согласен с{' '}
