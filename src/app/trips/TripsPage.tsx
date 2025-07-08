@@ -90,6 +90,9 @@ export default function TripsPage() {
                   activeTab === "all" ? "border-b-2 border-solid border-blue-600" : ""
                 }`}
                 leftSection={<LuDot size={20} />}
+                classNames={{
+                  tabLabel: "md:block hidden"
+                }}
               >
                 Все
               </Tabs.Tab>
@@ -99,8 +102,11 @@ export default function TripsPage() {
                   activeTab === "car" ? "border-b-2 border-solid border-blue-600" : ""
                 }`}
                 leftSection={<IoCarSport size={20} />}
+                classNames={{
+                  tabLabel: "md:block hidden"
+                }}
               >
-                Автомобиль
+                С попутчиками
               </Tabs.Tab>
               <Tabs.Tab
                 value="bus"
@@ -108,6 +114,9 @@ export default function TripsPage() {
                   activeTab === "bus" ? "border-b-2 border-solid border-blue-600" : ""
                 }`}
                 leftSection={<IoBus size={20} />}
+                classNames={{
+                  tabLabel: "md:block hidden"
+                }}
               >
                 Автобус
               </Tabs.Tab>
