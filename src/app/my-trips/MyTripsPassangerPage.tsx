@@ -58,8 +58,8 @@ export function MyTripsPassangerPage() {
       )}
 
       <div className="grid grid-cols-1 gap-4">
-        {data?.map((trip: any) => (
-          <TripPurchaseCard trip={trip} />
+        {data?.map((trip: any, index: number) => (
+          <TripPurchaseCard key={index} trip={trip} />
         ))}
       </div>
       <CreateTripModal
