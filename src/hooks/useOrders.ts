@@ -1,5 +1,5 @@
 import apiClient from '@/hooks/apiClient';
-import { useMutation, useQueryClient } from '@tanstack/react-query';
+import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 
 
 export interface CreateOrderDto {
@@ -25,4 +25,14 @@ export const useCreateOrder = () => {
   });
 };
 
+const getMyOrders = async (): Promise<any> => {
+  const { data } = await apiClient.get("orders/passanger");
+  return data;
+};
 
+export function useGetMyOrders() {
+  return useQuery({
+    queryKey: ["orders/passanger"],
+    queryFn: () => getMyOrders(),
+  });
+}

@@ -53,4 +53,25 @@ export function useUpdateDriver() {
       queryClient.invalidateQueries({ queryKey: ['drivers'] });
     },
   });
-}   
+}  
+
+const postDriverImages = async (images: File[]): Promise<{driver: Driver, token: string}> => {
+  const formData = new FormData();
+  images.forEach((image) => {
+    formData.append('images', image);
+  });
+  const { data } = await apiClient.post('/drivers/upload-car-images', formData);
+  return data;
+};
+
+export function usePostDriverImages() {
+  const queryClient = useQueryClient();
+
+  return useMutation<{driver: Driver, token: string}, Error, File[]>({
+    mutationFn: postDriverImages,
+    onSuccess: () => {
+      // Invalidate and refetch the drivers query after a successful creation
+      queryClient.invalidateQueries({ queryKey: ['drivers'] });
+    },
+  });
+} 

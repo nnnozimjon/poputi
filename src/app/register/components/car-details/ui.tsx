@@ -83,16 +83,25 @@ export const CarDetails = ({
           label: "text-gray-dark",
         }}
       />
-      <Input.Wrapper label="Гос номер">
+      <Input.Wrapper
+        label="Гос номер"
+        error={
+          carDetails.plate_number.length > 0 &&
+          !/^\d{4}[A-Za-z]{2}\d{2}$/.test(carDetails.plate_number)
+            ? "Формат: 4 цифры, 2 буквы, 2 цифры (например, 1234AB56)"
+            : undefined
+        }
+      >
         <Input
           value={carDetails.plate_number}
-          onChange={(event) => handleChange("plate_number", event.target.value)}
-          placeholder="Гос номер"
+          onChange={(event) => handleChange("plate_number", event.target.value.toUpperCase())}
+          placeholder="1234AB56"
           className="w-full md:w-[400px]"
           classNames={{
             input: "h-[50px] rounded-lg",
             section: "p-2",
           }}
+          maxLength={8}
         />
       </Input.Wrapper>
     </div>

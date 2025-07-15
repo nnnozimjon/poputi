@@ -15,25 +15,25 @@ export const ExperienceCounter = () => {
     {
       id: 1,
       icon: <FaCar />,
-      count: "1200+",
+      count: "1200000+",
       label: "Постоянные клиенты",
     },
     {
       id: 2,
       icon: <FaMapLocationDot />,
-      count: "300+",
+      count: "300000+",
       label: "Встреча попутчиков",
     },
     {
       id: 3,
       icon: <GiHorizonRoad />,
-      count: "544+",
+      count: "544000+",
       label: "Завершенные поездки",
     },
     {
       id: 4,
       icon: <RiEmotionHappyFill />,
-      count: "248+",
+      count: "1100000+",
       label: "Счастливые клиенты",
     },
   ];

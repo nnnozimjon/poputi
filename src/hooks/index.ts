@@ -14,3 +14,4 @@ export * from './usePreferences';
 export * from './useUserRegister';
 export * from './useUserLogin';
 export * from './useOrders';
+export * from './useUserInfo';

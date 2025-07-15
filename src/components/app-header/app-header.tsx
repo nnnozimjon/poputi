@@ -12,20 +12,20 @@ import {
   ActionIcon,
   Menu,
 } from "@mantine/core";
-import { Logo } from "../logo/logo";
 import { redirect } from "@/utils";
 import { useAppSelector } from "@/store/store";
 import { CgLogOut, CgProfile } from "react-icons/cg";
 import { useDispatch } from "react-redux";
 import { logout } from "@/store/slices";
 import Link from "next/link";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { FaAngleRight } from "react-icons/fa6";
 import { IoIosArrowDown, IoIosArrowUp } from "react-icons/io";
 import { useDisclosure } from "@mantine/hooks";
 import { LuCirclePlus } from "react-icons/lu";
 import { CreateTripModal } from "@/modals";
 import { useGeoLocation } from "@/hooks/useGeoLocation";
+import { IconCashBanknote } from "@tabler/icons-react";
 
 export const AppHeader = () => {
   const { city, loading: loadingCity } = useGeoLocation()
@@ -41,8 +41,9 @@ export const AppHeader = () => {
   const [isOpenMenu, { toggle: toggleMenu }] = useDisclosure(false);
 
   const logoutUser = () => {
-    dispatch(logout());
+    dispatch(logout() as any);
     setOpened(false);
+    window.location.reload();
   };
 
   const handleCreateTrip = () => {
@@ -81,7 +82,7 @@ export const AppHeader = () => {
                   className="text-main text-[16px] p-0 no-underline font-bold"
                   href={"/trips?type=car"}
                 >
-                  Автомобиль
+                  С попутчиками
                 </Link>
               </Group>
             </div>
@@ -196,6 +197,19 @@ export const AppHeader = () => {
                             onClick={() => redirect("/profile")}
                           >
                             Профиль
+                          </Button>
+                        </Menu.Item>
+                        <Menu.Item>
+                          <Button
+                            fullWidth
+                            rightSection={<IconCashBanknote
+                              className="text-dark-blue size-6" />}
+                            justify="space-between"
+                            variant="transparent"
+                            className="text-dark-blue p-0"
+                            onClick={() => redirect("/banking")}
+                          >
+                            Банкинг
                           </Button>
                         </Menu.Item>
                         <Menu.Item>
@@ -335,7 +349,7 @@ export const AppHeader = () => {
                     setOpened(false);
                   }}
                 >
-                  Автомобиль
+                  С попутчиками
                 </Button>
               </Stack>
             </Drawer>

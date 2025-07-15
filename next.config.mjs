@@ -2,7 +2,7 @@
 const nextConfig = {
     distDir: '.next',
     images: {
-        domains: ['test-api.poputi.tj', 'poputi.tj', 'api.poputi.tj', 'ecom.dc.tj'],
+        domains: ['test-api.poputi.tj', 'poputi.tj', 'api.poputi.tj', 'ecom.dc.tj', 'localhost'],
     }
 };
 

@@ -128,16 +128,16 @@ export const AppFooter = () => {
               </Link>
             </Flex>
             <div className="text-white/80 text-sm mb-4  ">
-              <svg
-                width={64}
-                height={64}
-                viewBox="0 0 380 317"
-                className="text-white"
-              >
-                <Logo />
-              </svg>
+              <Text className="text-white/80 font-bold text-2xl mb-4">
+                Poputi.tj
+              </Text>
             </div>
           </Flex>
+          <div className="mt-6 text-center">
+            <Text className="text-white/60 text-xs">
+              © {new Date().getFullYear()} ООО «Rohyob Group». Все права защищены.
+            </Text>
+          </div>
         </div>
       </Container>
 

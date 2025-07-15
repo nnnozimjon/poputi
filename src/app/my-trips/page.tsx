@@ -1,5 +1,5 @@
 import { Metadata } from "next";
-import { MyTripsPage } from "./MyTripsPage";
+import { TripsPage } from "./TripsPage";
 
 export const metadata: Metadata = {
   icons: './favicon.png',
@@ -13,5 +13,5 @@ export const metadata: Metadata = {
 };
 
 export default function Page() {
-  return <MyTripsPage />; 
+  return <TripsPage />; 
 }
